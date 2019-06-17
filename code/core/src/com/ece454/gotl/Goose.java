@@ -19,14 +19,16 @@ public class Goose {
     public int yPositionInTexture = texture.getHeight()/rows;
 
 
+    private boolean isJumping = false;
+    private boolean isDead = false;
     private static final int rows = 10;
     private static final int columns = 8;
     private static final int BOX_SIZE = 32;
     private static final float PLAYER_DENSITY = 1.0f;
     public static final float JUMP_FORCE = 250f;
     public static final float RUN_FORCE = 5f;
-    private static final float PLAYER_START_X = 28f;
-    private static final float PLAYER_START_Y = 18f;
+    private static final float PLAYER_START_X = 12f;
+    private static final float PLAYER_START_Y = 12f;
     private Body body;
 
     public Goose(World world) {
@@ -49,5 +51,18 @@ public class Goose {
 
     public Body getBody() {
         return body;
+    }
+
+    public void hit() {
+        isDead = true;
+    }
+    public void setJumping(boolean jumping) {
+        isJumping = jumping;
+    }
+    public boolean isJumping() {
+        return isJumping;
+    }
+    public boolean isDead() {
+        return isDead;
     }
 }
