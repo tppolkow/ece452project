@@ -1,22 +1,24 @@
 package com.ece454.gotl;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
+import handlers.WorldManager;
+
 public class Goose {
     public static final String PLAYER_IMG_PATH = "goose.png";
-    public Texture texture = new Texture(Goose.PLAYER_IMG_PATH);
-//    public int widthInTexture = texture.getWidth()/columns;
+    public static final int MAX_JUMP_FORCE_Y = 1000;
+    public static final int MAX_JUMP_FORCE_X = 130;
+    public Texture texture;
     public int widthInTexture = 60;
-//    public int heightInTexture = 60;
-    public int heightInTexture = texture.getHeight()/rows;
-//    public int heightInTexture = 50;
-    public int xPositionInTexture = texture.getWidth()/columns - widthInTexture;
-    public int yPositionInTexture = texture.getHeight()/rows;
+    public int heightInTexture;
+    public int xPositionInTexture;
+    public int yPositionInTexture;
 
 
     private boolean isJumping = false;
@@ -25,33 +27,45 @@ public class Goose {
     private static final int columns = 8;
     private static final int BOX_SIZE = 32;
     private static final float PLAYER_DENSITY = 1.0f;
-    public static final float JUMP_FORCE = 250f;
-    public static final float RUN_FORCE = 5f;
     private static final float PLAYER_START_X = 12f;
     private static final float PLAYER_START_Y = 12f;
-    private Body body;
+    public Body body;
 
-    public Goose(World world) {
-        createBoxBody(world, PLAYER_START_X, PLAYER_START_Y);
+    public Goose()
+    {
+        texture = new Texture(PLAYER_IMG_PATH);
+        heightInTexture = texture.getHeight()/rows;
+        xPositionInTexture = texture.getWidth()/columns - widthInTexture;
+        yPositionInTexture = texture.getHeight()/rows;
     }
 
-    private void createBoxBody(World world, float x, float y) {
+    public void createBoxBody(World world)
+    {
+        assert(world != null);
+
         BodyDef bdef = new BodyDef();
         bdef.fixedRotation = true;
         bdef.type = BodyDef.BodyType.DynamicBody;
-        bdef.position.set(x, y);
+        bdef.position.set(PLAYER_START_X, PLAYER_START_Y);
+        body = world.createBody(bdef);
+
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(BOX_SIZE / Game.PIXEL_PER_METER / 2, BOX_SIZE / Game.PIXEL_PER_METER / 2);
+
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
         fixtureDef.density = PLAYER_DENSITY;
-        body = world.createBody(bdef);
+
         body.createFixture(fixtureDef).setUserData(this);
+
+        shape.dispose();
     }
 
-    public Body getBody() {
+    public Body getBody()
+    {
         return body;
     }
+
 
     public void hit() {
         isDead = true;
@@ -59,10 +73,24 @@ public class Goose {
     public void setJumping(boolean jumping) {
         isJumping = jumping;
     }
+    public void jump(Vector2 drag)
+    {
+        if (drag.y < 0) return;
+        //System.out.println("BEFORE: x: " + drag.x + ", y: " + drag.y);
+        drag.x = Math.max(-MAX_JUMP_FORCE_X, drag.x);
+        drag.x = Math.min(MAX_JUMP_FORCE_X, drag.x);
+        drag.y = Math.min(MAX_JUMP_FORCE_Y, drag.y);
+        //System.out.println("AFTER:  x: " + drag.x + ", y: " + drag.y);
+        body.applyForceToCenter(drag, false);
+    }
     public boolean isJumping() {
         return isJumping;
     }
     public boolean isDead() {
         return isDead;
+    }
+    public void dispose()
+    {
+        texture.dispose();
     }
 }
