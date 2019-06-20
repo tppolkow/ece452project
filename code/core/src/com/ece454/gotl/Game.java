@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 
 import handlers.GameStateManager;
+import handlers.WorldManager;
 import states.PlayState;
 
 public class Game extends ApplicationAdapter {
@@ -26,6 +27,7 @@ public class Game extends ApplicationAdapter {
 	public static final int POSITION_ITERATIONS = 2;
 	private SpriteBatch batch;
 	private GameStateManager gsm;
+	private Box2DDebugRenderer box2DDebugRenderer;
 
 	@Override
 	public void create () {
@@ -38,7 +40,6 @@ public class Game extends ApplicationAdapter {
 	public void render ()
 	{
 	    gsm.render(batch);
-	    //box2DDebugRenderer.render(world, orthographicCamera.combined.scl(PIXEL_PER_METER));
 	}
 
 	@Override

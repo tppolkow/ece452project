@@ -13,6 +13,6 @@ public class Ground {
         bodyDef.type = BodyDef.BodyType.StaticBody;
         body = world.createBody(bodyDef);
         body.createFixture(shape, DENSITY).setUserData(this);
-        shape.dispose();
+//        shape.dispose();
     }
 }

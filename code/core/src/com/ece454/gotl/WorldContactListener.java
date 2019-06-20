@@ -14,10 +14,12 @@ public class WorldContactListener implements ContactListener {
         if (fa == null || fb == null) return;
         if (fa.getUserData() == null || fb.getUserData() == null) return;
         if (isGroundContact(fa, fb)) {
+            System.out.println("goose contact ground");
             Goose goose = (Goose) fb.getUserData();
             goose.setJumping(false);
         }
         if (isDangerContact(fa, fb)) {
+            System.out.println("goose contact danger");
             Goose goose = (Goose) fb.getUserData();
             goose.setJumping(false);
             goose.hit();

@@ -27,21 +27,23 @@ public class Goose {
     private static final int columns = 8;
     private static final int BOX_SIZE = 32;
     private static final float PLAYER_DENSITY = 1.0f;
-    private static final float PLAYER_START_X = 12f;
-    private static final float PLAYER_START_Y = 12f;
+    private static final float PLAYER_START_X = 1f;
+    private static final float PLAYER_START_Y = 4.5f;
+
+    private static final float TEXTURE_Y_IDLE_OFFSET = 22f;
+    private static final float TEXTURE_X_OFFSET = 16f;
+
     public Body body;
 
-    public Goose()
-    {
+    public Goose() {
         texture = new Texture(PLAYER_IMG_PATH);
-        heightInTexture = texture.getHeight()/rows;
-        xPositionInTexture = texture.getWidth()/columns - widthInTexture;
-        yPositionInTexture = texture.getHeight()/rows;
+        heightInTexture = texture.getHeight() / rows;
+        xPositionInTexture = texture.getWidth() / columns - widthInTexture;
+        yPositionInTexture = texture.getHeight() / rows;
     }
 
-    public void createBoxBody(World world)
-    {
-        assert(world != null);
+    public void createBoxBody(World world) {
+        assert (world != null);
 
         BodyDef bdef = new BodyDef();
         bdef.fixedRotation = true;
@@ -61,8 +63,7 @@ public class Goose {
         shape.dispose();
     }
 
-    public Body getBody()
-    {
+    public Body getBody() {
         return body;
     }
 
@@ -70,11 +71,21 @@ public class Goose {
     public void hit() {
         isDead = true;
     }
+
+    public float getCurrentTextureYOffset() {
+        //TODO: return correct offsets for each sprite so the goose sprite matches its collision boundaries
+        return TEXTURE_Y_IDLE_OFFSET;
+    }
+
+    public float getCurrentTextureXOffset() {
+        return TEXTURE_X_OFFSET;
+    }
+
     public void setJumping(boolean jumping) {
         isJumping = jumping;
     }
-    public void jump(Vector2 drag)
-    {
+
+    public void jump(Vector2 drag) {
         if (drag.y < 0) return;
         //System.out.println("BEFORE: x: " + drag.x + ", y: " + drag.y);
         drag.x = Math.max(-MAX_JUMP_FORCE_X, drag.x);
@@ -83,14 +94,16 @@ public class Goose {
         //System.out.println("AFTER:  x: " + drag.x + ", y: " + drag.y);
         body.applyForceToCenter(drag, false);
     }
+
     public boolean isJumping() {
         return isJumping;
     }
+
     public boolean isDead() {
         return isDead;
     }
-    public void dispose()
-    {
+
+    public void dispose() {
         texture.dispose();
     }
 }

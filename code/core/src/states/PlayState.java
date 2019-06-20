@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.ece454.gotl.Game;
 import com.ece454.gotl.Goose;
 
@@ -29,6 +30,7 @@ public class PlayState extends State
     private Goose goose;
     private boolean isPressed = false;
     private Vector2 initialPressPos, finalPressPos;
+    private Box2DDebugRenderer box2DDebugRenderer;
 
     public PlayState(GameStateManager gsm)
     {
@@ -41,6 +43,7 @@ public class PlayState extends State
         WorldManager.parseTiledMap(tiledMap);
         goose = new Goose();
         goose.createBoxBody(WorldManager.world);
+        box2DDebugRenderer = new Box2DDebugRenderer();
     }
 
 
@@ -53,13 +56,16 @@ public class PlayState extends State
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         tiledMapRenderer.render();
         sb.begin();
-        sb.draw(goose.texture, goose.body.getPosition().x * PIXEL_PER_METER - (goose.texture.getWidth() / 2f),
-                goose.body.getPosition().y * PIXEL_PER_METER - (goose.texture.getHeight() / 2f),
+        sb.draw(goose.texture, goose.body.getPosition().x * PIXEL_PER_METER - (goose.getCurrentTextureYOffset()),
+                goose.body.getPosition().y * PIXEL_PER_METER - (goose.getCurrentTextureXOffset()),
                 goose.xPositionInTexture,
                 goose.yPositionInTexture,
                 goose.widthInTexture,
                 goose.heightInTexture);
         sb.end();
+
+        //enable for debugging (draws the lines around objects)
+//        box2DDebugRenderer.render(WorldManager.world, cam.combined.scl(PIXEL_PER_METER));
     }
 
     @Override
@@ -74,6 +80,7 @@ public class PlayState extends State
             WorldManager.world.destroyBody(goose.body);
             goose.dispose();
             goose = new Goose();
+            goose.createBoxBody(WorldManager.world);
         }
 
         updateCamera();
