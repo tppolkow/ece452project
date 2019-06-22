@@ -2,7 +2,7 @@ package handlers;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.World;
-import com.ece454.gotl.Game;
+import com.ece454.gotl.GotlGame;
 
 import java.util.Stack;
 
@@ -10,10 +10,10 @@ import states.State;
 
 public class GameStateManager
 {
-    private Game game;
+    private GotlGame game;
     private Stack<State> states;
 
-    public GameStateManager(Game game)
+    public GameStateManager(GotlGame game)
     {
         this.game = game;
         states = new Stack<State>();
@@ -43,10 +43,10 @@ public class GameStateManager
         states.peek().update();
     }
 
-    public void render(SpriteBatch sb)
-    {
-        states.peek().render(sb);
-    }
+//    public void render(SpriteBatch sb)
+//    {
+//        states.peek().render(sb);
+//    }
 
-    public Game getGame() { return game; }
+    public GotlGame getGame() { return game; }
 }

@@ -1,6 +1,7 @@
 package com.ece454.gotl;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -16,16 +17,17 @@ import com.badlogic.gdx.physics.box2d.World;
 
 import handlers.GameStateManager;
 import handlers.WorldManager;
+import screens.LevelCompleteScreen;
 import states.PlayState;
 
-public class Game extends ApplicationAdapter {
+public class GotlGame extends Game {
 	public static final float PIXEL_PER_METER = 32f;
 
 	public static final float SCALE = 2.0f;
 	public static final float TIME_STEP = 1 / 60f;
 	public static final int VELOCITY_ITERATIONS = 6;
 	public static final int POSITION_ITERATIONS = 2;
-	private SpriteBatch batch;
+	public SpriteBatch batch;
 	private GameStateManager gsm;
 	private Box2DDebugRenderer box2DDebugRenderer;
 
@@ -33,13 +35,16 @@ public class Game extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		gsm = new GameStateManager(this);
-		gsm.push(new PlayState(gsm));
+		PlayState playScreen = new PlayState(gsm);
+		gsm.push(playScreen);
+		setScreen(playScreen);
 	}
 
 	@Override
 	public void render ()
 	{
-	    gsm.render(batch);
+		super.render();
+//	    gsm.render(batch);
 	}
 
 	@Override

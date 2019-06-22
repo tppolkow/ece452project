@@ -24,6 +24,11 @@ public class WorldContactListener implements ContactListener {
             goose.setJumping(false);
             goose.hit();
         }
+        if (isCloudContact(fa, fb)) {
+            System.out.println("Goose contact cloud, should end level");
+            Goose goose = (Goose) fb.getUserData();
+            goose.setLevelEnd(true);
+        }
     }
 
     @Override
@@ -48,6 +53,10 @@ public class WorldContactListener implements ContactListener {
 
     private boolean isGroundContact(Fixture a, Fixture b) {
         return (a.getUserData() instanceof Ground && b.getUserData() instanceof Goose);
+    }
+
+    private boolean isCloudContact(Fixture a, Fixture b) {
+        return (a.getUserData() instanceof Cloud && b.getUserData() instanceof Goose);
     }
 
     @Override
