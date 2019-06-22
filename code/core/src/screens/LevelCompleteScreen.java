@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.ece454.gotl.GotlGame;
 
+import handlers.GameStateManager;
 import states.PlayState;
 
 public class LevelCompleteScreen extends ScreenAdapter {
@@ -65,7 +66,7 @@ public class LevelCompleteScreen extends ScreenAdapter {
         restartbtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-
+                game.setScreen(new PlayState(new GameStateManager(game)));
             }
         });
         stage.addActor(restartbtn);

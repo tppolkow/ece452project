@@ -11,7 +11,7 @@ import states.State;
 public class GameStateManager
 {
     private GotlGame game;
-    private Stack<State> states;
+    private static Stack<State> states;
 
     public GameStateManager(GotlGame game)
     {
