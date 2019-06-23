@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 
+import handlers.AssetHandler;
 import handlers.GameStateManager;
 import handlers.WorldManager;
 import screens.LevelCompleteScreen;
@@ -30,14 +31,17 @@ public class GotlGame extends Game {
 	public SpriteBatch batch;
 	private GameStateManager gsm;
 	private Box2DDebugRenderer box2DDebugRenderer;
+	public AssetHandler assetHandler;
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		gsm = new GameStateManager(this);
+		assetHandler = new AssetHandler();
+		assetHandler.loadAssets();
 		PlayState playScreen = new PlayState(gsm);
 		gsm.push(playScreen);
-		setScreen(new LevelCompleteScreen(this));
+		setScreen(playScreen);
 	}
 
 	@Override
