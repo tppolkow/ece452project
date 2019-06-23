@@ -19,6 +19,7 @@ import handlers.AssetHandler;
 import handlers.GameStateManager;
 import handlers.WorldManager;
 import screens.LevelCompleteScreen;
+import screens.MenuScreen;
 import states.PlayState;
 
 public class GotlGame extends Game {
@@ -41,7 +42,9 @@ public class GotlGame extends Game {
 		assetHandler.loadAssets();
 		PlayState playScreen = new PlayState(gsm);
 		gsm.push(playScreen);
-		setScreen(playScreen);
+		// start screen
+		setScreen(new MenuScreen(this));
+		//setScreen(playScreen);
 	}
 
 	@Override
