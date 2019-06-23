@@ -37,7 +37,7 @@ public class GotlGame extends Game {
 		gsm = new GameStateManager(this);
 		PlayState playScreen = new PlayState(gsm);
 		gsm.push(playScreen);
-		setScreen(playScreen);
+		setScreen(new LevelCompleteScreen(this));
 	}
 
 	@Override

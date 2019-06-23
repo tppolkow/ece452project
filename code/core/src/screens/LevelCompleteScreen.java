@@ -3,9 +3,11 @@ package screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -23,8 +25,9 @@ import states.PlayState;
 public class LevelCompleteScreen extends ScreenAdapter {
 
     private static final String BTN_SKIN_PATH = "skins/holo/skin/dark-mdpi/Holo-dark-mdpi.json";
-    private static final String LABEL_SKIN_PATH = "skins/glassy/skin/glassy-ui.json";
+    private static final String FONT_PATH = "fonts/amatic/AmaticSC-Regular.ttf";
     private static final String RESTART = "RESTART";
+    private static final String LEVEL_COMPLETE = "Level Complete!!";
     private GotlGame game;
     private Stage stage;
 
@@ -60,27 +63,40 @@ public class LevelCompleteScreen extends ScreenAdapter {
 
     private void createButton() {
         Skin skin = new Skin(Gdx.files.internal(BTN_SKIN_PATH));
-        Button restartbtn = new TextButton(RESTART, skin);
-        restartbtn.setWidth(Gdx.graphics.getWidth()/2);
-        restartbtn.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2, Align.center);
-        restartbtn.addListener(new ChangeListener() {
+        Button restartBtn = new TextButton(RESTART, skin);
+        restartBtn.setWidth(Gdx.graphics.getWidth() / 2);
+        restartBtn.setPosition(Gdx.graphics.getWidth() / 2.6f,Gdx.graphics.getHeight() / 2, Align.center);
+        restartBtn.setTransform(true);
+        restartBtn.scaleBy(0.5f);
+        restartBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.setScreen(new PlayState(new GameStateManager(game)));
             }
         });
-        stage.addActor(restartbtn);
+        stage.addActor(restartBtn);
     }
 
     private void createLabel() {
         int row_height = Gdx.graphics.getWidth() / 12;
-        Skin labelSkin = new Skin(Gdx.files.internal(LABEL_SKIN_PATH));
-        Label title = new Label("Level Complete!!", labelSkin);
+        Label.LabelStyle labelStyle = new Label.LabelStyle();
+        labelStyle.font = generateLabelFont();
+        Label title = new Label(LEVEL_COMPLETE, labelStyle);
         title.setSize(Gdx.graphics.getWidth(), row_height);
-        title.setFontScale(5);
         title.setAlignment(Align.center);
         title.setPosition(0,Gdx.graphics.getHeight()-row_height*2);
         title.setWidth(Gdx.graphics.getWidth());
         stage.addActor(title);
+    }
+
+    private BitmapFont generateLabelFont() {
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT_PATH));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 120;
+        parameter.color = Color.RED;
+        BitmapFont font = generator.generateFont(parameter);
+        generator.dispose();
+
+        return font;
     }
 }
