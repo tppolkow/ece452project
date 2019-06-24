@@ -93,14 +93,14 @@ public class MenuState extends State {
         titlep1.setAlignment(Align.center);
         titlep1.setPosition(0,Gdx.graphics.getHeight()-row_height*2);
         titlep1.setWidth(Gdx.graphics.getWidth());
-        titlep1.setFontScale(2f);
+        titlep1.setFontScale(1.4f);
 
         Label titlep2 = new Label(TITLEOFGAMEP2, labelStyle);
         titlep2.setSize(Gdx.graphics.getWidth(), row_height);
         titlep2.setAlignment(Align.center);
         titlep2.setPosition(0,Gdx.graphics.getHeight()-row_height*3);
         titlep2.setWidth(Gdx.graphics.getWidth());
-        titlep2.setFontScale(2f);
+        titlep2.setFontScale(1.4f);
         stage.addActor(titlep1);
         stage.addActor(titlep2);
     }
