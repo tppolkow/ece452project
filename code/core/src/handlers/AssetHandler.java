@@ -19,7 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
  */
 public class AssetHandler {
 
-    public AssetManager manager = new AssetManager();
+    private AssetManager manager = new AssetManager();
     public static final String BTN_SKIN_PATH = "skins/holo/skin/dark-mdpi/Holo-dark-mdpi.json";
     public static final String FONT_PATH = "fonts/amatic/AmaticSC-Regular.ttf";
     public static final String MAP_PATH = "map/desert_demo.tmx";
@@ -50,5 +50,9 @@ public class AssetHandler {
     private void loadMap() {
         manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
         manager.load(MAP_PATH, TiledMap.class);
+    }
+
+    public AssetManager getManager() {
+        return manager;
     }
 }

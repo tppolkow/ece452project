@@ -11,7 +11,7 @@ import states.State;
 public class GameStateManager
 {
     private GotlGame game;
-    private static Stack<State> states;
+    private Stack<State> states;
 
     public GameStateManager(GotlGame game)
     {
@@ -43,10 +43,10 @@ public class GameStateManager
         states.peek().update();
     }
 
-//    public void render(SpriteBatch sb)
-//    {
-//        states.peek().render(sb);
-//    }
+    public void render()
+    {
+        states.peek().render();
+    }
 
     public GotlGame getGame() { return game; }
 }
