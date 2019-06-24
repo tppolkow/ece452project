@@ -1,38 +1,25 @@
 package com.ece454.gotl;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
 
 import handlers.AssetHandler;
 import handlers.GameStateManager;
-import handlers.WorldManager;
-import screens.LevelCompleteScreen;
-import screens.MenuScreen;
+import states.MenuState;
 import states.PlayState;
 
-public class GotlGame extends Game {
+public class GotlGame extends ApplicationAdapter {
 	public static final float PIXEL_PER_METER = 32f;
 
 	public static final float SCALE = 2.0f;
 	public static final float TIME_STEP = 1 / 60f;
 	public static final int VELOCITY_ITERATIONS = 6;
 	public static final int POSITION_ITERATIONS = 2;
-	public SpriteBatch batch;
+	private SpriteBatch batch;
 	private GameStateManager gsm;
 	private Box2DDebugRenderer box2DDebugRenderer;
-	public AssetHandler assetHandler;
+	private AssetHandler assetHandler;
 
 	@Override
 	public void create () {
@@ -40,18 +27,14 @@ public class GotlGame extends Game {
 		gsm = new GameStateManager(this);
 		assetHandler = new AssetHandler();
 		assetHandler.loadAssets();
-		PlayState playScreen = new PlayState(gsm);
-		gsm.push(playScreen);
-		// start screen
-		setScreen(new MenuScreen(this));
-		//setScreen(playScreen);
+		gsm.push(new PlayState(gsm));
+		gsm.push(new MenuState(gsm));
 	}
 
 	@Override
 	public void render ()
 	{
-		super.render();
-//	    gsm.render(batch);
+	    gsm.render();
 	}
 
 	@Override
@@ -64,5 +47,13 @@ public class GotlGame extends Game {
 	public void resize(int width, int height)
 	{
 		//orthographicCamera.setToOrtho(false, width/SCALE, height/SCALE);
+	}
+
+	public AssetHandler getAssetHandler() {
+		return assetHandler;
+	}
+
+	public SpriteBatch getSpriteBatch() {
+		return batch;
 	}
 }

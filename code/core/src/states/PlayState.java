@@ -1,7 +1,6 @@
 package states;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -9,21 +8,18 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.ece454.gotl.GotlGame;
 import com.ece454.gotl.Goose;
 
 import handlers.AssetHandler;
 import handlers.GameStateManager;
 import handlers.WorldManager;
-import screens.LevelCompleteScreen;
 
 import static com.ece454.gotl.GotlGame.PIXEL_PER_METER;
 import static com.ece454.gotl.GotlGame.POSITION_ITERATIONS;
-import static com.ece454.gotl.GotlGame.SCALE;
 import static com.ece454.gotl.GotlGame.TIME_STEP;
 import static com.ece454.gotl.GotlGame.VELOCITY_ITERATIONS;
 
-public class PlayState extends State implements Screen {
+public class PlayState extends State {
     private TiledMap tiledMap;
     private OrthogonalTiledMapRenderer tiledMapRenderer;
     private Goose goose;
@@ -37,8 +33,8 @@ public class PlayState extends State implements Screen {
         super(gsm);
         initialPressPos = new Vector2();
         finalPressPos = new Vector2();
-        assetHandler = gsm.getGame().assetHandler;
-        tiledMap = assetHandler.manager.get(assetHandler.MAP_PATH, TiledMap.class);
+        assetHandler = gsm.getGame().getAssetHandler();
+        tiledMap = assetHandler.getManager().get(assetHandler.MAP_PATH, TiledMap.class);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         WorldManager.resetWorld();
         WorldManager.parseTiledMap(tiledMap);
@@ -48,14 +44,9 @@ public class PlayState extends State implements Screen {
     }
 
     @Override
-    public void show() {
-
-    }
-
-    @Override
-    public void render(float delta) {
+    public void render() {
         update();
-        SpriteBatch sb = gsm.getGame().batch;
+        SpriteBatch sb = gsm.getGame().getSpriteBatch();
         sb.setProjectionMatrix(cam.combined);
         Gdx.gl.glClearColor(0.5f, 0.8f, 1f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -71,41 +62,18 @@ public class PlayState extends State implements Screen {
     }
 
     @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
     public void update()
     {
         WorldManager.world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 
         handleInput();
 
-        if (goose.isDead())
-        {
-            WorldManager.world.destroyBody(goose.body);
-            goose.dispose();
-            goose = new Goose();
-            goose.createBoxBody(WorldManager.world);
+        if (goose.isDead()) {
+            disposeAndCreateNewGoose();
         } else if (goose.isLevelEnd()) {
-            GotlGame game = gsm.getGame();
-            game.setScreen(new LevelCompleteScreen(game));
+            disposeAndCreateNewGoose();
+            gsm.push(new LevelCompleteState(gsm));
+            gsm.render();
         }
 
         updateCamera();
@@ -141,6 +109,13 @@ public class PlayState extends State implements Screen {
         position.y = goose.body.getPosition().y * PIXEL_PER_METER;
         cam.position.set(position);
         cam.update();
+    }
+
+    private void disposeAndCreateNewGoose() {
+        WorldManager.world.destroyBody(goose.body);
+        goose.dispose();
+        goose = new Goose();
+        goose.createBoxBody(WorldManager.world);
     }
 
     @Override
