@@ -23,6 +23,7 @@ public class Goose {
 
     private boolean isJumping = false;
     private boolean isDead = false;
+    private boolean isLevelEnd = false;
     private static final int rows = 10;
     private static final int columns = 8;
     private static final int BOX_SIZE = 32;
@@ -52,7 +53,7 @@ public class Goose {
         body = world.createBody(bdef);
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(BOX_SIZE / Game.PIXEL_PER_METER / 2, BOX_SIZE / Game.PIXEL_PER_METER / 2);
+        shape.setAsBox(BOX_SIZE / GotlGame.PIXEL_PER_METER / 2, BOX_SIZE / GotlGame.PIXEL_PER_METER / 2);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
@@ -85,6 +86,10 @@ public class Goose {
         isJumping = jumping;
     }
 
+    public void setLevelEnd(boolean end) {
+        this.isLevelEnd = end;
+    }
+
     public void jump(Vector2 drag) {
         if (drag.y < 0) return;
         //System.out.println("BEFORE: x: " + drag.x + ", y: " + drag.y);
@@ -101,6 +106,10 @@ public class Goose {
 
     public boolean isDead() {
         return isDead;
+    }
+
+    public boolean isLevelEnd() {
+        return isLevelEnd;
     }
 
     public void dispose() {
