@@ -52,6 +52,7 @@ public class PlayState extends State {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         tiledMapRenderer.render();
         sb.begin();
+        goose.setCorrectTexture();
         sb.draw(goose.texture, goose.body.getPosition().x * PIXEL_PER_METER - (goose.getCurrentTextureYOffset()),
                 goose.body.getPosition().y * PIXEL_PER_METER - (goose.getCurrentTextureXOffset()),
                 goose.xPositionInTexture,
@@ -68,8 +69,10 @@ public class PlayState extends State {
 
         handleInput();
 
-        if (goose.isDead()) {
+        if (goose.isLevelFailed()){
             disposeAndCreateNewGoose();
+        } else if (goose.isDead()) {
+            gooseDeathAnimation();
         } else if (goose.isLevelEnd()) {
             disposeAndCreateNewGoose();
             gsm.push(new LevelCompleteState(gsm));
@@ -109,6 +112,10 @@ public class PlayState extends State {
         position.y = goose.body.getPosition().y * PIXEL_PER_METER;
         cam.position.set(position);
         cam.update();
+    }
+
+    private void gooseDeathAnimation(){
+        goose.fall();
     }
 
     private void disposeAndCreateNewGoose() {

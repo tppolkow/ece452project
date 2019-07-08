@@ -12,6 +12,7 @@ import handlers.WorldManager;
 
 public class Goose {
     public static final String PLAYER_IMG_PATH = "goose.png";
+    public static final String REVERSE_PLAYER_IMG_PATH = "goose_flipped.png";
     public static final int MAX_JUMP_FORCE_Y = 1000;
     public static final int MAX_JUMP_FORCE_X = 130;
     public Texture texture;
@@ -24,6 +25,8 @@ public class Goose {
     private boolean isJumping = false;
     private boolean isDead = false;
     private boolean isLevelEnd = false;
+    private boolean isLevelFailed = false;
+
     private static final int rows = 10;
     private static final int columns = 8;
     private static final int BOX_SIZE = 32;
@@ -68,6 +71,37 @@ public class Goose {
         return body;
     }
 
+    private void setDeathTexture(){
+        texture = new Texture(PLAYER_IMG_PATH);
+        xPositionInTexture = texture.getWidth() / columns - widthInTexture;
+        yPositionInTexture = 7 * heightInTexture;
+    }
+
+    private void setFaceRightTexture(){
+        texture = new Texture(PLAYER_IMG_PATH);
+        xPositionInTexture = texture.getWidth() / columns - widthInTexture;
+        yPositionInTexture = heightInTexture;
+    }
+
+    private void setFaceLeftTexture(){
+        texture = new Texture(REVERSE_PLAYER_IMG_PATH);
+        xPositionInTexture = texture.getWidth() - widthInTexture;
+        yPositionInTexture = heightInTexture;
+    }
+
+
+    public void setCorrectTexture(){
+        if (isDead){
+            setDeathTexture();
+        }
+        else if (body.getLinearVelocity().x > 0){
+            setFaceRightTexture();
+        }
+        else if (body.getLinearVelocity().x < 0){
+            setFaceLeftTexture();
+        }
+    }
+
 
     public void hit() {
         isDead = true;
@@ -90,6 +124,10 @@ public class Goose {
         this.isLevelEnd = end;
     }
 
+    public boolean isLevelFailed() {
+        return isLevelFailed;
+    }
+
     public void jump(Vector2 drag) {
         if (drag.y < 0) return;
         //System.out.println("BEFORE: x: " + drag.x + ", y: " + drag.y);
@@ -98,6 +136,13 @@ public class Goose {
         drag.y = Math.min(MAX_JUMP_FORCE_Y, drag.y);
         //System.out.println("AFTER:  x: " + drag.x + ", y: " + drag.y);
         body.applyForceToCenter(drag, false);
+    }
+
+    public void fall(){
+        if (body.getLinearVelocity().y > 0 || body.getLinearVelocity().x > 0) {
+            body.setLinearVelocity(0, 0);
+        }
+        body.setLinearVelocity(0, -15);
     }
 
     public boolean isJumping() {
@@ -111,6 +156,8 @@ public class Goose {
     public boolean isLevelEnd() {
         return isLevelEnd;
     }
+
+    public void setLevelFailed(boolean levelFailed) { isLevelFailed = levelFailed; }
 
     public void dispose() {
         texture.dispose();
