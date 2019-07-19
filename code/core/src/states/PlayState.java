@@ -46,10 +46,7 @@ public class PlayState extends State {
 
     @Override
     public void render() {
-        if (!isTimerSet) {
-            gsm.getGame().setPlayTime(System.currentTimeMillis());
-            isTimerSet = true;
-        }
+        gsm.setPlayTime(System.currentTimeMillis());
         update();
         if (!goose.isLevelEnd()) {
             SpriteBatch sb = gsm.getGame().getSpriteBatch();
@@ -67,7 +64,6 @@ public class PlayState extends State {
             sb.end();
         } else {
             gsm.pop();
-            gsm.push(new LevelCompleteState(gsm));
             gsm.render();
         }
     }
@@ -82,9 +78,9 @@ public class PlayState extends State {
         if (goose.isDead()) {
             disposeAndCreateNewGoose();
         } else if (goose.isLevelEnd()) {
-            gsm.getGame().setPlayTime(System.currentTimeMillis() - gsm.getGame().getPlayTime());
+            gsm.setPlayTime(System.currentTimeMillis() - gsm.getPlayTime());
             goose.dispose();
-            gsm.getGame().levelCount++;
+            gsm.increaseLevel();
             return;
         }
 

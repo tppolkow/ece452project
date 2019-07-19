@@ -29,19 +29,17 @@ public class LevelCompleteState extends State {
     private static final float TWO_STAR_TIME = 20f;
     private Stage stage;
     private AssetHandler assetHandler;
-    private int level;
+    private int level = 0;
     private Table table = new Table();
-    private float playTime;
+    private float playTime = 0;
+    private boolean layoutCreated = false;
 
 
     public LevelCompleteState(GameStateManager gsm) {
         super(gsm);
         assetHandler = gsm.getGame().getAssetHandler();
-        level = gsm.getGame().levelCount;
-        playTime = gsm.getGame().getPlayTime() / 1000;
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
-        createLayout();
     }
 
     @Override
@@ -53,6 +51,7 @@ public class LevelCompleteState extends State {
     public void render() {
         Gdx.gl.glClearColor(0.5f, 0.8f, 1f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        update();
         SpriteBatch batch = gsm.getGame().getSpriteBatch();
         batch.begin();
         if (playTime >= ONE_STAR_TIME) {
@@ -72,7 +71,16 @@ public class LevelCompleteState extends State {
 
     @Override
     public void update() {
-
+        if (playTime == 0) {
+            playTime = gsm.getPlayTime() / 1000;
+        }
+        if (level == 0) {
+            level = gsm.getLevel();
+        }
+        if (!layoutCreated) {
+            layoutCreated = true;
+            createLayout();
+        }
     }
 
     @Override
