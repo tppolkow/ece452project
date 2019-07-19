@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.2" tiledversion="1.2.4" name="objects" tilewidth="325" tileheight="260" tilecount="15" columns="0">
+<tileset version="1.2" tiledversion="1.2.4" name="objects" tilewidth="325" tileheight="260" tilecount="19" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <image width="313" height="260" source="../objects/Tree.png"/>
@@ -45,5 +45,17 @@
  </tile>
  <tile id="17">
   <image width="325" height="135" source="../objects/cloud.png"/>
+ </tile>
+ <tile id="18">
+  <image width="125" height="102" source="../objects/danger_1.png"/>
+ </tile>
+ <tile id="19">
+  <image width="64" height="64" source="../objects/danger_2.png"/>
+ </tile>
+ <tile id="20">
+  <image width="32" height="32" source="../objects/danger_3.png"/>
+ </tile>
+ <tile id="21">
+  <image width="128" height="128" source="../objects/moon.png"/>
  </tile>
 </tileset>
