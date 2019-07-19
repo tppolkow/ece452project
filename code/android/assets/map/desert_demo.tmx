@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="left-up" width="16" height="64" tilewidth="32" tileheight="32" nextobjectid="62">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="left-up" width="16" height="64" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="68">
  <tileset firstgid="1" source="desert.tsx"/>
  <tileset firstgid="17" source="objects.tsx"/>
- <tileset firstgid="31" source="objects.tsx"/>
- <layer name="Tile Layer 2" width="16" height="64">
+ <layer id="1" name="Tile Layer 2" width="16" height="64">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -55,12 +54,12 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,1073741865,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,1073741865,0,1073741865,0,
+0,0,0,0,0,0,0,0,0,0,1073741851,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,1073741851,0,1073741851,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,1073741865,1073741865,0,0,0,0,0,0,0,0,
-1073741865,0,1073741865,0,1073741865,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,1073741851,1073741851,0,0,0,0,0,0,0,0,
+1073741851,0,1073741851,0,1073741851,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -71,7 +70,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer name="Tile Layer 1" width="16" height="64">
+ <layer id="2" name="Tile Layer 1" width="16" height="64">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -114,7 +113,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+34,0,0,0,0,0,34,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -139,7 +138,7 @@
 2,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup name="ground">
+ <objectgroup id="3" name="ground">
   <object id="48" x="1" y="1921">
    <polyline points="0,0 253,0 254,125"/>
   </object>
@@ -159,7 +158,7 @@
    <polyline points="0,0 10,-5"/>
   </object>
  </objectgroup>
- <objectgroup name="danger">
+ <objectgroup id="4" name="danger">
   <object id="52" x="258" y="2016.67">
    <polyline points="0,0 252.667,-0.666667"/>
   </object>
@@ -176,7 +175,12 @@
    <polyline points="0,0 10,21 23,29 29,31 49,26 56,18 61,10 63,7 70,10 72,15 80,27 92,30 106,27 116,20 121,15"/>
   </object>
  </objectgroup>
- <objectgroup name="bounds">
+ <objectgroup id="6" name="cloud">
+  <object id="65" x="3" y="1315">
+   <polyline points="0,0 38,30 441,27 506,22"/>
+  </object>
+ </objectgroup>
+ <objectgroup id="5" name="bounds">
   <object id="53" x="2.66667" y="5.33333">
    <polyline points="0,0 -1.33333,2040 508,2041.33 508,-2.66667 0,-1.33333"/>
   </object>
