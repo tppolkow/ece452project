@@ -22,7 +22,7 @@ public class AssetHandler {
     private AssetManager manager = new AssetManager();
     public static final String BTN_SKIN_PATH = "skins/holo/skin/dark-mdpi/Holo-dark-mdpi.json";
     public static final String FONT_PATH = "fonts/amatic/AmaticSC-Regular.ttf";
-    public static final String MAP_PATH = "map/desert_demo.tmx";
+    public static final String MAP_PATH = "map/forest_level.tmx";
 
     public void loadAssets() {
         loadFonts();
