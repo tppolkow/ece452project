@@ -16,10 +16,12 @@ public class GotlGame extends ApplicationAdapter {
 	public static final float TIME_STEP = 1 / 60f;
 	public static final int VELOCITY_ITERATIONS = 6;
 	public static final int POSITION_ITERATIONS = 2;
+	public static int levelCount = 0;
 	private SpriteBatch batch;
 	private GameStateManager gsm;
 	private Box2DDebugRenderer box2DDebugRenderer;
 	private AssetHandler assetHandler;
+	private long playTime;
 
 	@Override
 	public void create () {
@@ -27,6 +29,7 @@ public class GotlGame extends ApplicationAdapter {
 		gsm = new GameStateManager(this);
 		assetHandler = new AssetHandler();
 		assetHandler.loadAssets();
+		levelCount = 0;
 		gsm.push(new PlayState(gsm));
 		gsm.push(new MenuState(gsm));
 	}
@@ -55,5 +58,13 @@ public class GotlGame extends ApplicationAdapter {
 
 	public SpriteBatch getSpriteBatch() {
 		return batch;
+	}
+
+	public void setPlayTime(long playTime) {
+		this.playTime = playTime;
+	}
+
+	public long getPlayTime() {
+		return playTime;
 	}
 }

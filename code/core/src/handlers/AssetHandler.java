@@ -3,10 +3,9 @@ package handlers;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeType;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
@@ -23,11 +22,16 @@ public class AssetHandler {
     public static final String BTN_SKIN_PATH = "skins/holo/skin/dark-mdpi/Holo-dark-mdpi.json";
     public static final String FONT_PATH = "fonts/amatic/AmaticSC-Regular.ttf";
     public static final String MAP_PATH = "map/desert_demo.tmx";
+    public static final String ONE_STAR_PATH = "rating/1_star.png";
+    public static final String TWO_STAR_PATH= "rating/2_star.png";
+    public static final String THREE_STAR_PATH= "rating/3_star.png";
+
 
     public void loadAssets() {
         loadFonts();
         loadSkins();
         loadMap();
+        loadTexture();
         manager.finishLoading();
     }
 
@@ -50,6 +54,12 @@ public class AssetHandler {
     private void loadMap() {
         manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
         manager.load(MAP_PATH, TiledMap.class);
+    }
+
+    private void loadTexture() {
+        manager.load(ONE_STAR_PATH, Texture.class);
+        manager.load(TWO_STAR_PATH, Texture.class);
+        manager.load(THREE_STAR_PATH, Texture.class);
     }
 
     public AssetManager getManager() {

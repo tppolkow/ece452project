@@ -27,6 +27,7 @@ public class PlayState extends State {
     private Vector2 initialPressPos, finalPressPos;
     private Box2DDebugRenderer box2DDebugRenderer;
     private AssetHandler assetHandler;
+    private boolean isTimerSet = false;
 
     public PlayState(GameStateManager gsm)
     {
@@ -45,20 +46,30 @@ public class PlayState extends State {
 
     @Override
     public void render() {
+        if (!isTimerSet) {
+            gsm.getGame().setPlayTime(System.currentTimeMillis());
+            isTimerSet = true;
+        }
         update();
-        SpriteBatch sb = gsm.getGame().getSpriteBatch();
-        sb.setProjectionMatrix(cam.combined);
-        Gdx.gl.glClearColor(0.5f, 0.8f, 1f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        tiledMapRenderer.render();
-        sb.begin();
-        sb.draw(goose.texture, goose.body.getPosition().x * PIXEL_PER_METER - (goose.getCurrentTextureYOffset()),
-                goose.body.getPosition().y * PIXEL_PER_METER - (goose.getCurrentTextureXOffset()),
-                goose.xPositionInTexture,
-                goose.yPositionInTexture,
-                goose.widthInTexture,
-                goose.heightInTexture);
-        sb.end();
+        if (!goose.isLevelEnd()) {
+            SpriteBatch sb = gsm.getGame().getSpriteBatch();
+            sb.setProjectionMatrix(cam.combined);
+            Gdx.gl.glClearColor(0.5f, 0.8f, 1f, 1f);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            tiledMapRenderer.render();
+            sb.begin();
+            sb.draw(goose.texture, goose.body.getPosition().x * PIXEL_PER_METER - (goose.getCurrentTextureYOffset()),
+                    goose.body.getPosition().y * PIXEL_PER_METER - (goose.getCurrentTextureXOffset()),
+                    goose.xPositionInTexture,
+                    goose.yPositionInTexture,
+                    goose.widthInTexture,
+                    goose.heightInTexture);
+            sb.end();
+        } else {
+            gsm.pop();
+            gsm.push(new LevelCompleteState(gsm));
+            gsm.render();
+        }
     }
 
     @Override
@@ -71,9 +82,10 @@ public class PlayState extends State {
         if (goose.isDead()) {
             disposeAndCreateNewGoose();
         } else if (goose.isLevelEnd()) {
-            disposeAndCreateNewGoose();
-            gsm.push(new LevelCompleteState(gsm));
-            gsm.render();
+            gsm.getGame().setPlayTime(System.currentTimeMillis() - gsm.getGame().getPlayTime());
+            goose.dispose();
+            gsm.getGame().levelCount++;
+            return;
         }
 
         updateCamera();
