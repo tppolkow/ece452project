@@ -1,13 +1,6 @@
 package com.ece454.gotl;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.hardware.display.DisplayManager;
-import android.hardware.display.VirtualDisplay;
-import android.media.MediaRecorder;
-import android.media.projection.MediaProjection;
-import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -15,14 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
-import handlers.SocialMediaHandler;
-
-import java.io.IOException;
+import handlers.VideoShareHandler;
 
 public class AndroidLauncher extends AndroidApplication {
 
@@ -38,7 +28,6 @@ public class AndroidLauncher extends AndroidApplication {
 	private ToggleButton mToggleButton;
 	private MediaRecorder mMediaRecorder;
 
-
 	private GotlGame game;
 
 	@Override
@@ -48,29 +37,39 @@ public class AndroidLauncher extends AndroidApplication {
 		RelativeLayout layout = new RelativeLayout(this);
 		View myLayout = inflater.inflate(R.layout.wrapper, layout, false);
 
-
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		mScreenDensity = metrics.densityDpi;
 
-		mMediaRecorder = new MediaRecorder();
-		initRecorder();
-		prepareRecorder();
-
-		mProjectionManager = (MediaProjectionManager) getSystemService
-				(Context.MEDIA_PROJECTION_SERVICE);
-
-
-
-		mMediaProjectionCallback = new MediaProjectionCallback();
-
-
-
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useAccelerometer = false;
 		config.useCompass = false;
-		game = new GotlGame();
-		game.setSocialMediaHandler(new SocialMediaHandler(this));
-		initialize(game, config);
+
+		layout.addView(initializeForView(new GotlGame(), config));
+		layout.addView(myLayout);
+		setContentView(layout);
+
+		videoShareHandler = new VideoShareHandler(this);
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode != PERMISSION_CODE) {
+			Log.e(TAG, "Unknown request code: " + requestCode);
+			return;
+		}
+		if (resultCode != RESULT_OK) {
+			Toast.makeText(this,
+					"Screen Cast Permission Denied", Toast.LENGTH_SHORT).show();
+
+			videoShareHandler.toggleOff();
+			return;
+		}
+		videoShareHandler.beginRecording(resultCode, data);
 	}
 }
