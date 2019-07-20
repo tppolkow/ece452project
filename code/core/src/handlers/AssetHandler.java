@@ -2,6 +2,7 @@ package handlers;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -25,13 +26,14 @@ public class AssetHandler {
     public static final String ONE_STAR_PATH = "rating/1_star.png";
     public static final String TWO_STAR_PATH= "rating/2_star.png";
     public static final String THREE_STAR_PATH= "rating/3_star.png";
-
+    public static final String PLAYER_IMG_PATH = "goose.png";
+    public static final String REVERSE_PLAYER_IMG_PATH = "goose_flipped.png";
 
     public void loadAssets() {
         loadFonts();
         loadSkins();
         loadMap();
-        loadTexture();
+        loadTextures();
         manager.finishLoading();
     }
 
@@ -56,10 +58,13 @@ public class AssetHandler {
         manager.load(MAP_PATH, TiledMap.class);
     }
 
-    private void loadTexture() {
+    private void loadTextures(){
+        manager.setLoader(Texture.class, new TextureLoader(new InternalFileHandleResolver()));
         manager.load(ONE_STAR_PATH, Texture.class);
         manager.load(TWO_STAR_PATH, Texture.class);
         manager.load(THREE_STAR_PATH, Texture.class);
+        manager.load(PLAYER_IMG_PATH, Texture.class);
+        manager.load(REVERSE_PLAYER_IMG_PATH, Texture.class);
     }
 
     public AssetManager getManager() {
