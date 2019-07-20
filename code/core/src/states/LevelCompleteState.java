@@ -71,12 +71,8 @@ public class LevelCompleteState extends State {
 
     @Override
     public void update() {
-        if (playTime == 0) {
-            playTime = gsm.getPlayTime() / 1000;
-        }
-        if (level == 0) {
-            level = gsm.getLevel();
-        }
+        playTime = gsm.getPlayTime() / 1000;
+        level = gsm.getLevel();
         if (!layoutCreated) {
             layoutCreated = true;
             createLayout();
