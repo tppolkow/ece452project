@@ -133,12 +133,20 @@ public class Goose {
 
     public void jump(Vector2 drag) {
         if (drag.y < 0) return;
+        if (isJumping) return;
         //System.out.println("BEFORE: x: " + drag.x + ", y: " + drag.y);
         drag.x = Math.max(-MAX_JUMP_FORCE_X, drag.x);
         drag.x = Math.min(MAX_JUMP_FORCE_X, drag.x);
         drag.y = Math.min(MAX_JUMP_FORCE_Y, drag.y);
         //System.out.println("AFTER:  x: " + drag.x + ", y: " + drag.y);
         body.applyForceToCenter(drag, false);
+        isJumping = true;
+    }
+
+    public void checkIfIdle(){
+        if (Math.abs(body.getLinearVelocity().y) < 0.01 && Math.abs(body.getLinearVelocity().y) < 0.01){
+            isJumping = false;
+        }
     }
 
     public void fall(){
