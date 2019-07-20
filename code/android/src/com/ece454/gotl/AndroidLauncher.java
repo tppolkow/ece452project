@@ -13,7 +13,6 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
 import handlers.VideoShareHandler;
-
 import java.io.IOException;
 
 public class AndroidLauncher extends AndroidApplication {
@@ -23,7 +22,7 @@ public class AndroidLauncher extends AndroidApplication {
 	public int mScreenDensity;
 	public static final int DISPLAY_WIDTH = 480;
 	public static final int DISPLAY_HEIGHT = 640;
-	private GotlGame game;
+	private VideoShareHandler videoShareHandler;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -41,6 +40,7 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useAccelerometer = false;
 		config.useCompass = false;
+
 		layout.addView(initializeForView(new GotlGame(), config));
 		layout.addView(myLayout);
 		setContentView(layout);
@@ -60,10 +60,10 @@ public class AndroidLauncher extends AndroidApplication {
 		if (resultCode != RESULT_OK) {
 			Toast.makeText(this,
 					"Screen Cast Permission Denied", Toast.LENGTH_SHORT).show();
+
 			videoShareHandler.toggleOff();
 			return;
 		}
-
 		videoShareHandler.beginRecording(resultCode, data);
 	}
 }

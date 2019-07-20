@@ -1,5 +1,6 @@
 package handlers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.display.DisplayManager;
@@ -8,7 +9,6 @@ import android.media.MediaRecorder;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
-// import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ToggleButton;
@@ -47,9 +47,6 @@ public class VideoShareHandler
         mediaProjectionCallback = new MediaProjectionCallback();
         mMediaRecorder = new MediaRecorder();
         projectionManager = (MediaProjectionManager)mainActivity.getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-//      initRecorder();
-//      prepareRecorder();
-
 
         toggleButton = (ToggleButton)mainActivity.findViewById(R.id.toggle);
         toggleButton.setOnClickListener(new View.OnClickListener() {
@@ -77,7 +74,6 @@ public class VideoShareHandler
         }
     }
 
-
     public void beginRecording(int resultCode, Intent data)
     {
         mediaProjection = projectionManager.getMediaProjection(resultCode, data);
@@ -94,14 +90,13 @@ public class VideoShareHandler
     public void toggleOff()
     {
         toggleButton.setChecked(false);
-
     }
 
     public void onToggleScreenShare(View view) {
         if (((ToggleButton) view).isChecked()) {
-             initRecorder();
+            initRecorder();
             Log.e(AndroidLauncher.TAG, "initialized recorder " );
-             prepareRecorder();
+            prepareRecorder();
             Log.e(AndroidLauncher.TAG, "prepared recorder " );
             startScreenSharing();
             Log.e(AndroidLauncher.TAG, "started sharing" );
@@ -129,7 +124,6 @@ public class VideoShareHandler
             return;
         }
         virtualDisplay.release();
-        //mMediaRecorder.release();
     }
 
     private VirtualDisplay createVirtualDisplay() {
