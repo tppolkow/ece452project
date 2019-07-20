@@ -1,10 +1,13 @@
 package com.ece454.gotl;
 
+import android.net.Uri;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import handlers.AssetHandler;
 import handlers.GameStateManager;
+import handlers.SocialMediaHandler;
 import states.MenuState;
 
 public class GotlGame extends ApplicationAdapter {
@@ -17,6 +20,7 @@ public class GotlGame extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private GameStateManager gsm;
 	private AssetHandler assetHandler;
+	private SocialMediaHandler smHandler;
 
 	@Override
 	public void create () {
@@ -50,5 +54,15 @@ public class GotlGame extends ApplicationAdapter {
 
 	public SpriteBatch getSpriteBatch() {
 		return batch;
+	}
+
+	public void postVideo(Uri videoFileUri)
+	{
+		smHandler.postVideo(videoFileUri);
+	}
+
+	public void setSocialMediaHandler(SocialMediaHandler smh)
+	{
+		this.smHandler = smh;
 	}
 }

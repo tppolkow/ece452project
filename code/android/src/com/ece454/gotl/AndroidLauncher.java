@@ -21,14 +21,9 @@ public class AndroidLauncher extends AndroidApplication {
 	public static final String TAG = "MainActivity";
 	public static final int PERMISSION_CODE = 1;
 	public int mScreenDensity;
-	private MediaProjectionManager mProjectionManager;
-	private static final int DISPLAY_WIDTH = 480;
-	private static final int DISPLAY_HEIGHT = 640;
-	private MediaProjection mMediaProjection;
-	private VirtualDisplay mVirtualDisplay;
-	private MediaProjectionCallback mMediaProjectionCallback;
-	private ToggleButton mToggleButton;
-	private MediaRecorder mMediaRecorder;
+	public static final int DISPLAY_WIDTH = 480;
+	public static final int DISPLAY_HEIGHT = 640;
+	private GotlGame game;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -41,14 +36,14 @@ public class AndroidLauncher extends AndroidApplication {
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		mScreenDensity = metrics.densityDpi;
 
+		videoShareHandler = new VideoShareHandler(this);
+
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useAccelerometer = false;
 		config.useCompass = false;
 		layout.addView(initializeForView(new GotlGame(), config));
 		layout.addView(myLayout);
 		setContentView(layout);
-
-		videoShareHandler = new VideoShareHandler(this);
 	}
 
 	@Override
@@ -68,7 +63,6 @@ public class AndroidLauncher extends AndroidApplication {
 			videoShareHandler.toggleOff();
 			return;
 		}
-
 
 		videoShareHandler.beginRecording(resultCode, data);
 	}
