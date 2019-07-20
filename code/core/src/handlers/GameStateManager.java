@@ -21,7 +21,7 @@ public class GameStateManager
         states = new Stack<State>();
     }
 
-    public static GameStateManager getInstance(GotlGame game) {
+    public static GameStateManager getInstance() {
         if (singleton == null) {
             throw new AssertionError("Have to call init first");
         }
