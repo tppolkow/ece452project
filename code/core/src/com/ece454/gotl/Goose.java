@@ -11,8 +11,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import handlers.WorldManager;
 
 public class Goose {
-    public static final String PLAYER_IMG_PATH = "goose.png";
-    public static final String REVERSE_PLAYER_IMG_PATH = "goose_flipped.png";
     public static final int MAX_JUMP_FORCE_Y = 1000;
     public static final int MAX_JUMP_FORCE_X = 130;
     public Texture texture;
@@ -41,10 +39,11 @@ public class Goose {
 
     public Body body;
 
-    public Goose() {
-        forwardTexture = new Texture(PLAYER_IMG_PATH);
-        texture = forwardTexture;
-        reverseTexture = new Texture(REVERSE_PLAYER_IMG_PATH);
+    public Goose(Texture forwardTexture, Texture reverseTexture) {
+        this.forwardTexture = forwardTexture;
+        this.reverseTexture = reverseTexture;
+
+        texture = this.forwardTexture;
         heightInTexture = texture.getHeight() / rows;
         xPositionInTexture = texture.getWidth() / columns - widthInTexture;
         yPositionInTexture = texture.getHeight() / rows;
@@ -164,6 +163,6 @@ public class Goose {
     public void setLevelFailed(boolean levelFailed) { isLevelFailed = levelFailed; }
 
     public void dispose() {
-        texture.dispose();
+
     }
 }

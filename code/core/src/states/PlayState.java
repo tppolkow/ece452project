@@ -2,6 +2,7 @@ package states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -27,6 +28,8 @@ public class PlayState extends State {
     private Vector2 initialPressPos, finalPressPos;
     private Box2DDebugRenderer box2DDebugRenderer;
     private AssetHandler assetHandler;
+    private Texture gooseForwardTexture;
+    private Texture gooseReverseTexture;
 
     public PlayState(GameStateManager gsm)
     {
@@ -38,7 +41,10 @@ public class PlayState extends State {
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         WorldManager.resetWorld();
         WorldManager.parseTiledMap(tiledMap);
-        goose = new Goose();
+
+        gooseForwardTexture = assetHandler.getManager().get( assetHandler.PLAYER_IMG_PATH, Texture.class);
+        gooseReverseTexture = assetHandler.getManager().get( assetHandler.REVERSE_PLAYER_IMG_PATH, Texture.class);
+        goose = new Goose(gooseForwardTexture, gooseReverseTexture);
         goose.createBoxBody(WorldManager.world);
         box2DDebugRenderer = new Box2DDebugRenderer();
     }
@@ -121,7 +127,8 @@ public class PlayState extends State {
     private void disposeAndCreateNewGoose() {
         WorldManager.world.destroyBody(goose.body);
         goose.dispose();
-        goose = new Goose();
+        System.out.println("GOose FORAWWRD " + gooseForwardTexture.toString());
+        goose = new Goose(gooseForwardTexture, gooseReverseTexture);
         goose.createBoxBody(WorldManager.world);
     }
 
