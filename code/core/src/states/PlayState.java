@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.ece454.gotl.Goose;
 
-import handlers.AssetHandler;
 import handlers.GameStateManager;
 import handlers.WorldManager;
 
@@ -26,15 +25,13 @@ public class PlayState extends State {
     private boolean isPressed = false;
     private Vector2 initialPressPos, finalPressPos;
     private Box2DDebugRenderer box2DDebugRenderer;
-    private AssetHandler assetHandler;
 
-    public PlayState(GameStateManager gsm)
+    public PlayState(GameStateManager gsm, TiledMap levelMap)
     {
         super(gsm);
         initialPressPos = new Vector2();
         finalPressPos = new Vector2();
-        assetHandler = gsm.getGame().getAssetHandler();
-        tiledMap = assetHandler.getManager().get(assetHandler.MAP_PATH, TiledMap.class);
+        tiledMap = levelMap;
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         WorldManager.resetWorld();
         WorldManager.parseTiledMap(tiledMap);
