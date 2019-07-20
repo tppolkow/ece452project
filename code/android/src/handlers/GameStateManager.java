@@ -21,6 +21,7 @@ public class GameStateManager
         states = new Stack<State>();
         isTimerSet = false;
         restartLvl = false;
+        states = new Stack<>();
     }
 
     public void push(State s)
@@ -31,20 +32,6 @@ public class GameStateManager
     public void pop()
     {
         states.pop().dispose();
-    }
-
-    public void set(State s)
-    {
-        if (!states.empty())
-        {
-            pop();
-        }
-        states.push(s);
-    }
-
-    public void update(float dt)
-    {
-        states.peek().update();
     }
 
     public void render()

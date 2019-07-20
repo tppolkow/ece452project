@@ -11,14 +11,14 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.ece454.gotl.Goose;
 
-import handlers.AssetHandler;
-import handlers.GameStateManager;
-import handlers.WorldManager;
-
 import static com.ece454.gotl.GotlGame.PIXEL_PER_METER;
 import static com.ece454.gotl.GotlGame.POSITION_ITERATIONS;
 import static com.ece454.gotl.GotlGame.TIME_STEP;
 import static com.ece454.gotl.GotlGame.VELOCITY_ITERATIONS;
+
+import handlers.AssetHandler;
+import handlers.GameStateManager;
+import handlers.WorldManager;
 
 public class PlayState extends State {
     private TiledMap tiledMap;

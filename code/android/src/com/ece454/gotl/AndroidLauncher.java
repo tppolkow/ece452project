@@ -19,7 +19,8 @@ import android.widget.ToggleButton;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.ece454.gotl.GotlGame;
+
+import handlers.SocialMediaHandler;
 
 import java.io.IOException;
 
@@ -37,6 +38,8 @@ public class AndroidLauncher extends AndroidApplication {
 	private ToggleButton mToggleButton;
 	private MediaRecorder mMediaRecorder;
 
+
+	private GotlGame game;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -66,122 +69,8 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		config.useAccelerometer = false;
 		config.useCompass = false;
-		layout.addView(initializeForView(new GotlGame(), config));
-		layout.addView(myLayout);
-		setContentView(layout);
-
-		mToggleButton = (ToggleButton) findViewById(R.id.toggle);
-		mToggleButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				onToggleScreenShare(v);
-			}
-		});
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		if (mMediaProjection != null) {
-			mMediaProjection.stop();
-			mMediaProjection = null;
-		}
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode != PERMISSION_CODE) {
-			Log.e(TAG, "Unknown request code: " + requestCode);
-			return;
-		}
-		if (resultCode != RESULT_OK) {
-			Toast.makeText(this,
-					"Screen Cast Permission Denied", Toast.LENGTH_SHORT).show();
-			mToggleButton.setChecked(false);
-			return;
-		}
-		mMediaProjection = mProjectionManager.getMediaProjection(resultCode, data);
-		mMediaProjection.registerCallback(mMediaProjectionCallback, null);
-		mVirtualDisplay = createVirtualDisplay();
-		mMediaRecorder.start();
-	}
-
-	public void onToggleScreenShare(View view) {
-		if (((ToggleButton) view).isChecked()) {
-			shareScreen();
-		} else {
-			mMediaRecorder.stop();
-			mMediaRecorder.reset();
-			Log.v(TAG, "Recording Stopped");
-			stopScreenSharing();
-			initRecorder();
-			prepareRecorder();
-		}
-	}
-
-	private void shareScreen() {
-		if (mMediaProjection == null) {
-			startActivityForResult(mProjectionManager.createScreenCaptureIntent(), PERMISSION_CODE);
-			return;
-		}
-		mVirtualDisplay = createVirtualDisplay();
-		mMediaRecorder.start();
-	}
-
-	private void stopScreenSharing() {
-		if (mVirtualDisplay == null) {
-			return;
-		}
-		mVirtualDisplay.release();
-		//mMediaRecorder.release();
-	}
-
-	private VirtualDisplay createVirtualDisplay() {
-		return mMediaProjection.createVirtualDisplay("MainActivity",
-				DISPLAY_WIDTH, DISPLAY_HEIGHT, mScreenDensity,
-				DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
-				mMediaRecorder.getSurface(), null /*Callbacks*/, null /*Handler*/);
-	}
-
-	private class MediaProjectionCallback extends MediaProjection.Callback {
-		@Override
-		public void onStop() {
-			if (mToggleButton.isChecked()) {
-				mToggleButton.setChecked(false);
-				mMediaRecorder.stop();
-				mMediaRecorder.reset();
-				Log.v(TAG, "Recording Stopped");
-				initRecorder();
-				prepareRecorder();
-			}
-			mMediaProjection = null;
-			stopScreenSharing();
-			Log.i(TAG, "MediaProjection Stopped");
-		}
-	}
-
-	private void prepareRecorder() {
-		try {
-			mMediaRecorder.prepare();
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-			finish();
-		} catch (IOException e) {
-			e.printStackTrace();
-			finish();
-		}
-	}
-
-	private void initRecorder() {
-		// mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-		mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
-		mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-		mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-		// mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-		mMediaRecorder.setVideoEncodingBitRate(512 * 1000);
-		mMediaRecorder.setVideoFrameRate(30);
-		mMediaRecorder.setVideoSize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
-		mMediaRecorder.setOutputFile(getFilesDir() + "/capture.mp4");
-		Log.v(TAG, getFilesDir() + "/capture.mp4");
+		game = new GotlGame();
+		game.setSocialMediaHandler(new SocialMediaHandler(this));
+		initialize(game, config);
 	}
 }
