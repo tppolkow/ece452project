@@ -2,6 +2,7 @@ package states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.ece454.gotl.Goose;
 
+import handlers.AssetHandler;
 import handlers.GameStateManager;
 import handlers.WorldManager;
 
@@ -25,6 +27,9 @@ public class PlayState extends State {
     private boolean isPressed = false;
     private Vector2 initialPressPos, finalPressPos;
     private Box2DDebugRenderer box2DDebugRenderer;
+    private AssetHandler assetHandler;
+    private Texture gooseForwardTexture;
+    private Texture gooseReverseTexture;
 
     public PlayState(GameStateManager gsm, TiledMap levelMap)
     {
@@ -35,7 +40,10 @@ public class PlayState extends State {
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         WorldManager.resetWorld();
         WorldManager.parseTiledMap(tiledMap);
-        goose = new Goose();
+
+        gooseForwardTexture = assetHandler.getManager().get( assetHandler.PLAYER_IMG_PATH, Texture.class);
+        gooseReverseTexture = assetHandler.getManager().get( assetHandler.REVERSE_PLAYER_IMG_PATH, Texture.class);
+        goose = new Goose(gooseForwardTexture, gooseReverseTexture);
         goose.createBoxBody(WorldManager.world);
         box2DDebugRenderer = new Box2DDebugRenderer();
     }
@@ -49,6 +57,7 @@ public class PlayState extends State {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         tiledMapRenderer.render();
         sb.begin();
+        goose.setCorrectTexture();
         sb.draw(goose.texture, goose.body.getPosition().x * PIXEL_PER_METER - (goose.getCurrentTextureYOffset()),
                 goose.body.getPosition().y * PIXEL_PER_METER - (goose.getCurrentTextureXOffset()),
                 goose.xPositionInTexture,
@@ -65,8 +74,10 @@ public class PlayState extends State {
 
         handleInput();
 
-        if (goose.isDead()) {
+        if (goose.isLevelFailed()){
             disposeAndCreateNewGoose();
+        } else if (goose.isDead()) {
+            gooseDeathAnimation();
         } else if (goose.isLevelEnd()) {
             disposeAndCreateNewGoose();
             gsm.push(new LevelCompleteState(gsm));
@@ -108,10 +119,15 @@ public class PlayState extends State {
         cam.update();
     }
 
+    private void gooseDeathAnimation(){
+        goose.fall();
+    }
+
     private void disposeAndCreateNewGoose() {
         WorldManager.world.destroyBody(goose.body);
         goose.dispose();
-        goose = new Goose();
+        System.out.println("GOose FORAWWRD " + gooseForwardTexture.toString());
+        goose = new Goose(gooseForwardTexture, gooseReverseTexture);
         goose.createBoxBody(WorldManager.world);
     }
 

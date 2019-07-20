@@ -2,9 +2,11 @@ package handlers;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.assets.loaders.TextureLoader;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeType;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -27,11 +29,14 @@ public class AssetHandler {
     public static final String LEVEL_3_PATH = "map/level_3.tmx";
     public static final String LEVEL_4_PATH = "map/level_4.tmx";
     public static final String LEVEL_5_PATH = "map/level_5.tmx";
+    public static final String PLAYER_IMG_PATH = "goose.png";
+    public static final String REVERSE_PLAYER_IMG_PATH = "goose_flipped.png";
 
     public void loadAssets() {
         loadFonts();
         loadSkins();
         loadMap();
+        loadTextures();
         manager.finishLoading();
     }
 
@@ -58,6 +63,12 @@ public class AssetHandler {
         manager.load(LEVEL_3_PATH, TiledMap.class);
         manager.load(LEVEL_4_PATH, TiledMap.class);
         manager.load(LEVEL_5_PATH, TiledMap.class);
+    }
+
+    private void loadTextures(){
+        manager.setLoader(Texture.class, new TextureLoader(new InternalFileHandleResolver()));
+        manager.load(PLAYER_IMG_PATH, Texture.class);
+        manager.load(REVERSE_PLAYER_IMG_PATH, Texture.class);
     }
 
     public AssetManager getManager() {

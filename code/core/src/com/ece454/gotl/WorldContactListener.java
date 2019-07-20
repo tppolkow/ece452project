@@ -6,6 +6,8 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
+import handlers.WorldManager;
+
 public class WorldContactListener implements ContactListener {
     @Override
     public void beginContact(Contact cntct) {
@@ -13,21 +15,24 @@ public class WorldContactListener implements ContactListener {
         Fixture fb = cntct.getFixtureB();
         if (fa == null || fb == null) return;
         if (fa.getUserData() == null || fb.getUserData() == null) return;
+        Goose goose = (Goose) fb.getUserData();
         if (isGroundContact(fa, fb)) {
             System.out.println("goose contact ground");
-            Goose goose = (Goose) fb.getUserData();
             goose.setJumping(false);
         }
         if (isDangerContact(fa, fb)) {
             System.out.println("goose contact danger");
-            Goose goose = (Goose) fb.getUserData();
             goose.setJumping(false);
             goose.hit();
         }
         if (isCloudContact(fa, fb)) {
             System.out.println("Goose contact cloud, should end level");
-            Goose goose = (Goose) fb.getUserData();
             goose.setLevelEnd(true);
+        }
+        //level ends if goose hits bounds and is dead
+        if (isBoundsContact(fa, fb) && goose.isDead()){
+            System.out.println("dead goose contact bound, should reset level");
+            goose.setLevelFailed(true);
         }
     }
 
@@ -59,8 +64,19 @@ public class WorldContactListener implements ContactListener {
         return (a.getUserData() instanceof Cloud && b.getUserData() instanceof Goose);
     }
 
+    private boolean isBoundsContact(Fixture a, Fixture b){
+        return (a.getUserData() instanceof Bounds && b.getUserData() instanceof Goose);
+    }
+
     @Override
     public void preSolve(Contact cntct, Manifold mnfld) {
+        Fixture fa = cntct.getFixtureA();
+        Fixture fb = cntct.getFixtureB();
+        Goose goose = (Goose) fb.getUserData();
+        //disable contact for death animation
+        if (!isBoundsContact(fa, fb) && goose.isDead()) {
+            cntct.setEnabled(false);
+        }
     }
 
     @Override
