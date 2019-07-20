@@ -1,11 +1,13 @@
 package com.ece454.gotl;
 
+import android.net.Uri;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
 import handlers.AssetHandler;
 import handlers.GameStateManager;
+import handlers.SocialMediaHandler;
 import states.MenuState;
 import states.PlayState;
 
@@ -18,8 +20,8 @@ public class GotlGame extends ApplicationAdapter {
 	public static final int POSITION_ITERATIONS = 2;
 	private SpriteBatch batch;
 	private GameStateManager gsm;
-	private Box2DDebugRenderer box2DDebugRenderer;
 	private AssetHandler assetHandler;
+	private SocialMediaHandler smHandler;
 
 	@Override
 	public void create () {
@@ -46,7 +48,6 @@ public class GotlGame extends ApplicationAdapter {
 	@Override
 	public void resize(int width, int height)
 	{
-		//orthographicCamera.setToOrtho(false, width/SCALE, height/SCALE);
 	}
 
 	public AssetHandler getAssetHandler() {
@@ -55,5 +56,15 @@ public class GotlGame extends ApplicationAdapter {
 
 	public SpriteBatch getSpriteBatch() {
 		return batch;
+	}
+
+	public void postVideo(Uri videoFileUri)
+	{
+		smHandler.postVideo(videoFileUri);
+	}
+
+	public void setSocialMediaHandler(SocialMediaHandler smh)
+	{
+		this.smHandler = smh;
 	}
 }

@@ -1,7 +1,5 @@
 package handlers;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.physics.box2d.World;
 import com.ece454.gotl.GotlGame;
 
 import java.util.Stack;
@@ -16,7 +14,7 @@ public class GameStateManager
     public GameStateManager(GotlGame game)
     {
         this.game = game;
-        states = new Stack<State>();
+        states = new Stack<>();
     }
 
     public void push(State s)
@@ -27,20 +25,6 @@ public class GameStateManager
     public void pop()
     {
         states.pop().dispose();
-    }
-
-    public void set(State s)
-    {
-        if (!states.empty())
-        {
-            pop();
-        }
-        states.push(s);
-    }
-
-    public void update(float dt)
-    {
-        states.peek().update();
     }
 
     public void render()
