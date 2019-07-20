@@ -16,6 +16,8 @@ public class Goose {
     public static final int MAX_JUMP_FORCE_Y = 1000;
     public static final int MAX_JUMP_FORCE_X = 130;
     public Texture texture;
+    private Texture forwardTexture;
+    private Texture reverseTexture;
     public int widthInTexture = 60;
     public int heightInTexture;
     public int xPositionInTexture;
@@ -40,7 +42,9 @@ public class Goose {
     public Body body;
 
     public Goose() {
-        texture = new Texture(PLAYER_IMG_PATH);
+        forwardTexture = new Texture(PLAYER_IMG_PATH);
+        texture = forwardTexture;
+        reverseTexture = new Texture(REVERSE_PLAYER_IMG_PATH);
         heightInTexture = texture.getHeight() / rows;
         xPositionInTexture = texture.getWidth() / columns - widthInTexture;
         yPositionInTexture = texture.getHeight() / rows;
@@ -72,19 +76,19 @@ public class Goose {
     }
 
     private void setDeathTexture(){
-        texture = new Texture(PLAYER_IMG_PATH);
+        texture = forwardTexture;
         xPositionInTexture = texture.getWidth() / columns - widthInTexture;
         yPositionInTexture = 7 * heightInTexture;
     }
 
     private void setFaceRightTexture(){
-        texture = new Texture(PLAYER_IMG_PATH);
+        texture = forwardTexture;
         xPositionInTexture = texture.getWidth() / columns - widthInTexture;
         yPositionInTexture = heightInTexture;
     }
 
     private void setFaceLeftTexture(){
-        texture = new Texture(REVERSE_PLAYER_IMG_PATH);
+        texture = reverseTexture;
         xPositionInTexture = texture.getWidth() - widthInTexture;
         yPositionInTexture = heightInTexture;
     }
