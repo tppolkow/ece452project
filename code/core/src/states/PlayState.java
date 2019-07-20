@@ -38,11 +38,11 @@ public class PlayState extends State {
         finalPressPos = new Vector2();
         tiledMap = levelMap;
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+        assetHandler = gsm.getGame().getAssetHandler();
         WorldManager.resetWorld();
         WorldManager.parseTiledMap(tiledMap);
-
-        gooseForwardTexture = assetHandler.getManager().get( assetHandler.PLAYER_IMG_PATH, Texture.class);
-        gooseReverseTexture = assetHandler.getManager().get( assetHandler.REVERSE_PLAYER_IMG_PATH, Texture.class);
+        gooseForwardTexture = assetHandler.getManager().get(assetHandler.PLAYER_IMG_PATH, Texture.class);
+        gooseReverseTexture = assetHandler.getManager().get(assetHandler.REVERSE_PLAYER_IMG_PATH, Texture.class);
         goose = new Goose(gooseForwardTexture, gooseReverseTexture);
         goose.createBoxBody(WorldManager.world);
         box2DDebugRenderer = new Box2DDebugRenderer();
