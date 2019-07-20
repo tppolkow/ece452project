@@ -8,8 +8,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
-import handlers.WorldManager;
-
 public class Goose {
     public static final String PLAYER_IMG_PATH = "goose.png";
     public static final int MAX_JUMP_FORCE_Y = 1000;
