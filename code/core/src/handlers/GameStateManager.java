@@ -8,34 +8,16 @@ import states.State;
 
 public class GameStateManager
 {
-    private static GameStateManager singleton = null;
     private GotlGame game;
     private Stack<State> states;
     private long playTime;
     private boolean isTimerSet;
     private int level;
 
-    private GameStateManager(GotlGame game)
+    public GameStateManager(GotlGame game)
     {
         this.game = game;
         states = new Stack<State>();
-    }
-
-    public static GameStateManager getInstance() {
-        if (singleton == null) {
-            throw new AssertionError("Have to call init first");
-        }
-
-        return singleton;
-    }
-
-    public static GameStateManager init(GotlGame game) {
-        if (singleton != null) {
-            throw new AssertionError("Game State Manager already initialized");
-        }
-
-        singleton = new GameStateManager(game);
-        return singleton;
     }
 
     public void push(State s)

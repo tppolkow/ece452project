@@ -25,10 +25,9 @@ public class GotlGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		gsm = GameStateManager.init(this);
+		gsm = new GameStateManager(this);
 		assetHandler = new AssetHandler();
 		assetHandler.loadAssets();
-		gsm.push(new LevelCompleteState(gsm));
 		gsm.push(new PlayState(gsm));
 		gsm.push(new MenuState(gsm));
 	}

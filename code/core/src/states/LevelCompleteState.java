@@ -5,14 +5,18 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -85,18 +89,31 @@ public class LevelCompleteState extends State {
         stage.dispose();
     }
 
-    private Button createNextLvlBtn(Skin skin) {
-        Button nextLvlBtn = new TextButton(NEXT_LEVEL, skin);
+    private Button createNextLvlBtn() {
+        Texture texture = assetHandler.getManager().get(assetHandler.NEXT_LEVEL_BUTTON_PATH, Texture.class);
+        Drawable drawable = new TextureRegionDrawable(new TextureRegion(texture));
+        Button nextLvlBtn = new ImageButton(drawable);
         configureBtn(nextLvlBtn);
 
         return nextLvlBtn;
     }
 
-    private Button createMainMenuBtn(Skin skin) {
-        Button mainMenuBtn = new TextButton(MAIN_MENU, skin);
+    private Button createMainMenuBtn() {
+        Texture texture = assetHandler.getManager().get(assetHandler.MENU_BUTTON_PATH, Texture.class);
+        Drawable drawable = new TextureRegionDrawable(new TextureRegion(texture));
+        Button mainMenuBtn = new ImageButton(drawable);
         configureBtn(mainMenuBtn);
 
         return mainMenuBtn;
+    }
+
+    private Button createRestartBtn() {
+        Texture texture = assetHandler.getManager().get(assetHandler.RESTART_BUTTON_PATH, Texture.class);
+        Drawable drawable = new TextureRegionDrawable(new TextureRegion(texture));
+        Button restartBtn = new ImageButton(drawable);
+        configureBtn(restartBtn);
+
+        return restartBtn;
     }
 
     private void configureBtn(Button button) {
@@ -134,19 +151,18 @@ public class LevelCompleteState extends State {
     }
 
     private void createLayout() {
-        Skin skin = assetHandler.getManager().get(assetHandler.BTN_SKIN_PATH, Skin.class);
         Label title = createTitle();
         Label timeLabel = createTimeLabel();
-        Button nextLvlBtn = createNextLvlBtn(skin);
-        Button mainMenuBtn = createMainMenuBtn(skin);
-        table.add(title).colspan(2).align(Align.center).width(Gdx.graphics.getWidth()).padBottom(150);
+        Button nextLvlBtn = createNextLvlBtn();
+        Button mainMenuBtn = createMainMenuBtn();
+        Button restartBtn = createRestartBtn();
+        table.add(title).colspan(3).align(Align.center).width(Gdx.graphics.getWidth()).padBottom(150);
         table.row();
-        table.add(timeLabel).colspan(2).align(Align.center).width(Gdx.graphics.getWidth()).padBottom(100);
+        table.add(timeLabel).colspan(3).align(Align.center).width(Gdx.graphics.getWidth()).padBottom(100);
         table.row();
-        table.row().expand().fill();
-        table.row().expand().fill();
-        table.add(mainMenuBtn);
-        table.add(nextLvlBtn);
+        table.add(mainMenuBtn).size(100, 100);
+        table.add(restartBtn).size(100, 100);
+        table.add(nextLvlBtn).size(100, 100);
 //        table.debug();
         table.setWidth(Gdx.graphics.getWidth());
         table.align(Align.center|Align.top);

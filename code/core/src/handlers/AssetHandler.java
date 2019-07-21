@@ -28,10 +28,13 @@ public class AssetHandler {
     public static final String THREE_STAR_PATH= "rating/3_star.png";
     public static final String PLAYER_IMG_PATH = "goose.png";
     public static final String REVERSE_PLAYER_IMG_PATH = "goose_flipped.png";
+    public static final String MENU_BUTTON_PATH = "buttons/menu_button.png";
+    public static final String NEXT_LEVEL_BUTTON_PATH = "buttons/next_level_button.png";
+    public static final String RESTART_BUTTON_PATH = "buttons/restart_button.png";
 
     public void loadAssets() {
         loadFonts();
-        loadSkins();
+        loadButtonImgs();
         loadMap();
         loadTextures();
         manager.finishLoading();
@@ -49,8 +52,10 @@ public class AssetHandler {
         manager.load(FONT_PATH, BitmapFont.class, parameter);
     }
 
-    private void loadSkins() {
-        manager.load(BTN_SKIN_PATH, Skin.class);
+    private void loadButtonImgs() {
+        manager.load(MENU_BUTTON_PATH, Texture.class);
+        manager.load(NEXT_LEVEL_BUTTON_PATH, Texture.class);
+        manager.load(RESTART_BUTTON_PATH, Texture.class);
     }
 
     private void loadMap() {

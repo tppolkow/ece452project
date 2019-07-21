@@ -69,9 +69,6 @@ public class PlayState extends State {
                     goose.widthInTexture,
                     goose.heightInTexture);
             sb.end();
-        } else {
-            gsm.pop();
-            gsm.render();
         }
     }
 
@@ -90,6 +87,9 @@ public class PlayState extends State {
             gsm.setPlayTime(System.currentTimeMillis() - gsm.getPlayTime());
             goose.dispose();
             gsm.increaseLevel();
+            gsm.pop();
+            gsm.push(new LevelCompleteState(gsm));
+            gsm.render();
             return;
         }
 
