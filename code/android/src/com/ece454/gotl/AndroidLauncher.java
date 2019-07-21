@@ -1,5 +1,6 @@
 package com.ece454.gotl;
 
+import android.content.Context;
 import android.content.Intent;
 import android.hardware.display.VirtualDisplay;
 import android.media.MediaRecorder;
@@ -28,10 +29,12 @@ public class AndroidLauncher extends AndroidApplication {
 	public static final int DISPLAY_WIDTH = 480;
 	public static final int DISPLAY_HEIGHT = 640;
 	private VideoShareHandler videoShareHandler;
+	private static Context context;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		context = getApplicationContext();
 		LayoutInflater inflater = getLayoutInflater();
 		RelativeLayout layout = new RelativeLayout(this);
 		View myLayout = inflater.inflate(R.layout.wrapper, layout, false);
@@ -49,6 +52,11 @@ public class AndroidLauncher extends AndroidApplication {
 		setContentView(layout);
 
 		videoShareHandler = new VideoShareHandler(this);
+	}
+
+	public static Context getAppContext()
+	{
+		return context;
 	}
 
 	@Override
