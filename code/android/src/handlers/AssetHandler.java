@@ -33,9 +33,12 @@ public class AssetHandler {
     public static final String LEVEL_5_PATH = "map/level_5.tmx";
     public static final String PLAYER_IMG_PATH = "goose.png";
     public static final String REVERSE_PLAYER_IMG_PATH = "goose_flipped.png";
+    public static final String GOOSE_FACE_PATH = "goose_face.png";
+    public static final String GOTL_CREST_PATH = "gotl_crest.png";
     public static final String MENU_BUTTON_PATH = "buttons/menu_button.png";
     public static final String NEXT_LEVEL_BUTTON_PATH = "buttons/next_level_button.png";
     public static final String RESTART_BUTTON_PATH = "buttons/restart_button.png";
+    public static final String START_BUTTON_PATH = "buttons/start_button.png";
 
     public void loadAssets() {
         loadFonts();
@@ -61,6 +64,7 @@ public class AssetHandler {
         manager.load(MENU_BUTTON_PATH, Texture.class);
         manager.load(NEXT_LEVEL_BUTTON_PATH, Texture.class);
         manager.load(RESTART_BUTTON_PATH, Texture.class);
+        manager.load(START_BUTTON_PATH, Texture.class);
     }
 
     private void loadMap() {
@@ -79,6 +83,8 @@ public class AssetHandler {
         manager.load(THREE_STAR_PATH, Texture.class);
         manager.load(PLAYER_IMG_PATH, Texture.class);
         manager.load(REVERSE_PLAYER_IMG_PATH, Texture.class);
+        manager.load(GOOSE_FACE_PATH, Texture.class);
+        manager.load(GOTL_CREST_PATH, Texture.class);
     }
 
     public AssetManager getManager() {
