@@ -72,6 +72,8 @@ public class PlayState extends State {
     {
         WorldManager.world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 
+        goose.checkIfIdle();
+
         handleInput();
 
         if (goose.isLevelFailed()){
