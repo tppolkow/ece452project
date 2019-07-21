@@ -2,13 +2,11 @@ package com.ece454.gotl;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 
 import handlers.AssetHandler;
 import handlers.GameStateManager;
 import states.MenuState;
-import states.PlayState;
 
 public class GotlGame extends ApplicationAdapter {
 	public static final float PIXEL_PER_METER = 32f;
@@ -28,7 +26,6 @@ public class GotlGame extends ApplicationAdapter {
 		gsm = new GameStateManager(this);
 		assetHandler = new AssetHandler();
 		assetHandler.loadAssets();
-		gsm.push(new PlayState(gsm, assetHandler.getManager().get(assetHandler.LEVEL_1_PATH, TiledMap.class)));
 		gsm.push(new MenuState(gsm));
 	}
 

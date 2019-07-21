@@ -50,21 +50,24 @@ public class PlayState extends State {
 
     @Override
     public void render() {
+        gsm.setPlayTime(System.currentTimeMillis());
         update();
-        SpriteBatch sb = gsm.getGame().getSpriteBatch();
-        sb.setProjectionMatrix(cam.combined);
-        Gdx.gl.glClearColor(0.5f, 0.8f, 1f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        tiledMapRenderer.render();
-        sb.begin();
-        goose.setCorrectTexture();
-        sb.draw(goose.texture, goose.body.getPosition().x * PIXEL_PER_METER - (goose.getCurrentTextureYOffset()),
-                goose.body.getPosition().y * PIXEL_PER_METER - (goose.getCurrentTextureXOffset()),
-                goose.xPositionInTexture,
-                goose.yPositionInTexture,
-                goose.widthInTexture,
-                goose.heightInTexture);
-        sb.end();
+        if (!goose.isLevelEnd()) {
+            SpriteBatch sb = gsm.getGame().getSpriteBatch();
+            sb.setProjectionMatrix(cam.combined);
+            Gdx.gl.glClearColor(0.5f, 0.8f, 1f, 1f);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            tiledMapRenderer.render();
+            sb.begin();
+            goose.setCorrectTexture();
+            sb.draw(goose.texture, goose.body.getPosition().x * PIXEL_PER_METER - (goose.getCurrentTextureYOffset()),
+                    goose.body.getPosition().y * PIXEL_PER_METER - (goose.getCurrentTextureXOffset()),
+                    goose.xPositionInTexture,
+                    goose.yPositionInTexture,
+                    goose.widthInTexture,
+                    goose.heightInTexture);
+            sb.end();
+        }
     }
 
     @Override
@@ -79,9 +82,9 @@ public class PlayState extends State {
         } else if (goose.isDead()) {
             gooseDeathAnimation();
         } else if (goose.isLevelEnd()) {
-            disposeAndCreateNewGoose();
-            gsm.push(new LevelCompleteState(gsm));
-            gsm.render();
+            goose.dispose();
+            renderLvlComplete();
+            return;
         }
 
         updateCamera();
@@ -129,6 +132,18 @@ public class PlayState extends State {
         System.out.println("GOose FORAWWRD " + gooseForwardTexture.toString());
         goose = new Goose(gooseForwardTexture, gooseReverseTexture);
         goose.createBoxBody(WorldManager.world);
+    }
+
+    private void renderLvlComplete() {
+        gsm.setPlayTime(System.currentTimeMillis() - gsm.getPlayTime());
+        if (!gsm.lvlRestarted()) {
+            gsm.increaseLevel();
+        } else {
+            gsm.restartLvl(false);
+        }
+        gsm.pop();
+        gsm.push(new LevelCompleteState(gsm));
+        gsm.render();
     }
 
     @Override
