@@ -80,7 +80,7 @@ public class MenuState extends State {
     }
 
     private void createCrest() {
-        Image crest = new Image(assetHandler.getManager().get(assetHandler.GOTL_CREST, Texture.class));
+        Image crest = new Image(assetHandler.getManager().get(assetHandler.GOTL_CREST_PATH, Texture.class));
         Image goose = new Image(assetHandler.getManager().get(assetHandler.GOOSE_FACE_PATH, Texture.class));
         crest.addAction(Actions.repeat(RepeatAction.FOREVER, Actions.rotateBy(20, 1)));
         crest.setPosition(Gdx.graphics.getWidth() / 2.02f - crest.getWidth() / 2, Gdx.graphics.getHeight() / 1.5f - crest.getWidth() / 2);
