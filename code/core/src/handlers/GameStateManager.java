@@ -12,12 +12,15 @@ public class GameStateManager
     private Stack<State> states;
     private long playTime;
     private boolean isTimerSet;
+    private boolean restartLvl;
     private int level;
 
     public GameStateManager(GotlGame game)
     {
         this.game = game;
         states = new Stack<State>();
+        isTimerSet = false;
+        restartLvl = false;
     }
 
     public void push(State s)
@@ -67,7 +70,19 @@ public class GameStateManager
         this.level++;
     }
 
-    public int getLevel() {
+    public int getLvl() {
         return level;
+    }
+
+    public void resetLvl() {
+        this.level = 0;
+    }
+
+    public void restartLvl(boolean restartLvl) {
+        this.restartLvl = restartLvl;
+    }
+
+    public boolean lvlRestarted() {
+        return restartLvl;
     }
 }

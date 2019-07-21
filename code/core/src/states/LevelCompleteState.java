@@ -3,9 +3,12 @@ package states;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -56,17 +59,17 @@ public class LevelCompleteState extends State {
         Gdx.gl.glClearColor(0.5f, 0.8f, 1f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         update();
-        SpriteBatch batch = gsm.getGame().getSpriteBatch();
+        Batch batch = stage.getBatch();
         batch.begin();
         if (playTime >= ONE_STAR_TIME) {
             Texture one_star = assetHandler.getManager().get(assetHandler.ONE_STAR_PATH, Texture.class);
-            batch.draw(one_star,Gdx.graphics.getWidth() / 3.8f - one_star.getWidth() / 2, Gdx.graphics.getHeight() / 2.85f);
+            batch.draw(one_star, Gdx.graphics.getWidth() / 2 - one_star.getWidth() / 2, Gdx.graphics.getHeight() / 1.95f);
         } else if (playTime >= TWO_STAR_TIME && playTime < ONE_STAR_TIME) {
             Texture two_star = assetHandler.getManager().get(assetHandler.TWO_STAR_PATH, Texture.class);
-            batch.draw(two_star,Gdx.graphics.getWidth() / 3.8f - two_star.getWidth() / 2, Gdx.graphics.getHeight() / 2.85f);
+            batch.draw(two_star, Gdx.graphics.getWidth() / 2 - two_star.getWidth() / 2, Gdx.graphics.getHeight() / 1.95f);
         } else {
             Texture three_star = assetHandler.getManager().get(assetHandler.THREE_STAR_PATH, Texture.class);
-            batch.draw(three_star,Gdx.graphics.getWidth() / 3.8f - three_star.getWidth() / 2, Gdx.graphics.getHeight() / 2.85f);
+            batch.draw(three_star, Gdx.graphics.getWidth() / 2 - three_star.getWidth() / 2, Gdx.graphics.getHeight() / 1.95f);
         }
         batch.end();
         stage.act();
@@ -76,7 +79,7 @@ public class LevelCompleteState extends State {
     @Override
     public void update() {
         playTime = gsm.getPlayTime() / 1000;
-        level = gsm.getLevel();
+        level = gsm.getLvl();
         if (!layoutCreated) {
             layoutCreated = true;
             createLayout();
@@ -93,7 +96,14 @@ public class LevelCompleteState extends State {
         Texture texture = assetHandler.getManager().get(assetHandler.NEXT_LEVEL_BUTTON_PATH, Texture.class);
         Drawable drawable = new TextureRegionDrawable(new TextureRegion(texture));
         Button nextLvlBtn = new ImageButton(drawable);
-        configureBtn(nextLvlBtn);
+        nextLvlBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gsm.pop();
+                gsm.push(new PlayState(gsm, getLvlMap(gsm.getLvl() + 1)));
+                gsm.render();
+            }
+        });
 
         return nextLvlBtn;
     }
@@ -102,7 +112,15 @@ public class LevelCompleteState extends State {
         Texture texture = assetHandler.getManager().get(assetHandler.MENU_BUTTON_PATH, Texture.class);
         Drawable drawable = new TextureRegionDrawable(new TextureRegion(texture));
         Button mainMenuBtn = new ImageButton(drawable);
-        configureBtn(mainMenuBtn);
+        mainMenuBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gsm.pop();
+                gsm.resetLvl();
+                gsm.push(new MenuState(gsm));
+                gsm.render();
+            }
+        });
 
         return mainMenuBtn;
     }
@@ -111,20 +129,18 @@ public class LevelCompleteState extends State {
         Texture texture = assetHandler.getManager().get(assetHandler.RESTART_BUTTON_PATH, Texture.class);
         Drawable drawable = new TextureRegionDrawable(new TextureRegion(texture));
         Button restartBtn = new ImageButton(drawable);
-        configureBtn(restartBtn);
-
-        return restartBtn;
-    }
-
-    private void configureBtn(Button button) {
-        button.setHeight(Gdx.graphics.getHeight() / 2);
-        button.addListener(new ChangeListener() {
+        restartBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 gsm.pop();
+                gsm.restartLvl(true);
+                gsm.push(new PlayState(gsm, getLvlMap(gsm.getLvl())));
                 gsm.render();
             }
         });
+
+
+        return restartBtn;
     }
 
     private Label createTitle() {
@@ -151,23 +167,49 @@ public class LevelCompleteState extends State {
     }
 
     private void createLayout() {
+        int span = 3;
+        if (gsm.getLvl() == 5) {
+            span = 2;
+        }
         Label title = createTitle();
         Label timeLabel = createTimeLabel();
         Button nextLvlBtn = createNextLvlBtn();
         Button mainMenuBtn = createMainMenuBtn();
         Button restartBtn = createRestartBtn();
-        table.add(title).colspan(3).align(Align.center).width(Gdx.graphics.getWidth()).padBottom(150);
+        table.add(title).colspan(span).align(Align.center).width(Gdx.graphics.getWidth()).padBottom(150);
         table.row();
-        table.add(timeLabel).colspan(3).align(Align.center).width(Gdx.graphics.getWidth()).padBottom(100);
+        table.add(timeLabel).colspan(span).align(Align.center).width(Gdx.graphics.getWidth()).padBottom(100);
         table.row();
         table.add(mainMenuBtn).size(100, 100);
         table.add(restartBtn).size(100, 100);
-        table.add(nextLvlBtn).size(100, 100);
+        if (gsm.getLvl() != 5) {
+            table.add(nextLvlBtn).size(100, 100);
+        }
 //        table.debug();
         table.setWidth(Gdx.graphics.getWidth());
         table.align(Align.center|Align.top);
         table.setPosition(0, Gdx.graphics.getHeight() / 1.5f);
 
         stage.addActor(table);
+    }
+
+    private TiledMap getLvlMap(int nextLvl) {
+        TiledMap map;
+        switch (nextLvl) {
+            case 1: map = assetHandler.getManager().get(assetHandler.LEVEL_1_PATH, TiledMap.class);
+                break;
+            case 2: map = assetHandler.getManager().get(assetHandler.LEVEL_2_PATH, TiledMap.class);
+                break;
+            case 3: map = assetHandler.getManager().get(assetHandler.LEVEL_3_PATH, TiledMap.class);
+                break;
+            case 4: map = assetHandler.getManager().get(assetHandler.LEVEL_4_PATH, TiledMap.class);
+                break;
+            case 5: map = assetHandler.getManager().get(assetHandler.LEVEL_5_PATH, TiledMap.class);
+                break;
+            default: map = assetHandler.getManager().get(assetHandler.LEVEL_1_PATH, TiledMap.class);
+                break;
+        }
+
+        return map;
     }
 }

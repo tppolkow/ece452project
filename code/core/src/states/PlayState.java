@@ -83,12 +83,8 @@ public class PlayState extends State {
         } else if (goose.isDead()) {
             gooseDeathAnimation();
         } else if (goose.isLevelEnd()) {
-            gsm.setPlayTime(System.currentTimeMillis() - gsm.getPlayTime());
             goose.dispose();
-            gsm.increaseLevel();
-            gsm.pop();
-            gsm.push(new LevelCompleteState(gsm));
-            gsm.render();
+            renderLvlComplete();
             return;
         }
 
@@ -137,6 +133,18 @@ public class PlayState extends State {
         System.out.println("GOose FORAWWRD " + gooseForwardTexture.toString());
         goose = new Goose(gooseForwardTexture, gooseReverseTexture);
         goose.createBoxBody(WorldManager.world);
+    }
+
+    private void renderLvlComplete() {
+        gsm.setPlayTime(System.currentTimeMillis() - gsm.getPlayTime());
+        if (!gsm.lvlRestarted()) {
+            gsm.increaseLevel();
+        } else {
+            gsm.restartLvl(false);
+        }
+        gsm.pop();
+        gsm.push(new LevelCompleteState(gsm));
+        gsm.render();
     }
 
     @Override

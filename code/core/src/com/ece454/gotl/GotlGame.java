@@ -29,7 +29,6 @@ public class GotlGame extends ApplicationAdapter {
 		gsm = new GameStateManager(this);
 		assetHandler = new AssetHandler();
 		assetHandler.loadAssets();
-		gsm.push(new PlayState(gsm, assetHandler.getManager().get(assetHandler.LEVEL_1_PATH, TiledMap.class)));
 		gsm.push(new MenuState(gsm));
 	}
 
