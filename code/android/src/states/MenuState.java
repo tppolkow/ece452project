@@ -3,6 +3,7 @@ package states;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -76,8 +77,7 @@ public class MenuState extends State {
         startBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gsm.pop();
-                gsm.render();
+                gsm.set(new PlayState(gsm, assetHandler.getManager().get(assetHandler.LEVEL_1_PATH, TiledMap.class)));
             }
         });
         stage.addActor(startBtn);

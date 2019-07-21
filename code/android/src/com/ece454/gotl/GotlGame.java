@@ -24,7 +24,7 @@ public class GotlGame extends ApplicationAdapter {
 		gsm = new GameStateManager(this);
 		assetHandler = new AssetHandler();
 		assetHandler.loadAssets();
-		gsm.push(new MenuState(gsm));
+		gsm.set(new MenuState(gsm));
 	}
 
 	@Override

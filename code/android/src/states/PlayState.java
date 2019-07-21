@@ -8,7 +8,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.ece454.gotl.Goose;
 
 import static com.ece454.gotl.GotlGame.PIXEL_PER_METER;
@@ -26,7 +25,6 @@ public class PlayState extends State {
     private Goose goose;
     private boolean isPressed = false;
     private Vector2 initialPressPos, finalPressPos;
-    private Box2DDebugRenderer box2DDebugRenderer;
     private AssetHandler assetHandler;
     private Texture gooseForwardTexture;
     private Texture gooseReverseTexture;
@@ -45,7 +43,6 @@ public class PlayState extends State {
         gooseReverseTexture = assetHandler.getManager().get(assetHandler.REVERSE_PLAYER_IMG_PATH, Texture.class);
         goose = new Goose(gooseForwardTexture, gooseReverseTexture);
         goose.createBoxBody(WorldManager.world);
-        box2DDebugRenderer = new Box2DDebugRenderer();
     }
 
     @Override
@@ -141,9 +138,7 @@ public class PlayState extends State {
         } else {
             gsm.restartLvl(false);
         }
-        gsm.pop();
-        gsm.push(new LevelCompleteState(gsm));
-        gsm.render();
+        gsm.set(new LevelCompleteState(gsm));
     }
 
     @Override

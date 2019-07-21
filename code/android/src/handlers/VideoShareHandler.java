@@ -8,6 +8,7 @@ import android.media.MediaRecorder;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
+// import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ToggleButton;
@@ -46,6 +47,10 @@ public class VideoShareHandler
         mediaProjectionCallback = new MediaProjectionCallback();
         mMediaRecorder = new MediaRecorder();
         projectionManager = (MediaProjectionManager)mainActivity.getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+//      initRecorder();
+//      prepareRecorder();
+
+
         toggleButton = (ToggleButton)mainActivity.findViewById(R.id.toggle);
         toggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +76,7 @@ public class VideoShareHandler
             Log.i(AndroidLauncher.TAG, "MediaProjection Stopped");
         }
     }
+
 
     public void beginRecording(int resultCode, Intent data)
     {
@@ -120,6 +126,7 @@ public class VideoShareHandler
             return;
         }
         virtualDisplay.release();
+        //mMediaRecorder.release();
     }
 
     private VirtualDisplay createVirtualDisplay() {
