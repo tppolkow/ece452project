@@ -26,6 +26,11 @@ public class AssetHandler {
     public static final String ONE_STAR_PATH = "rating/1_star.png";
     public static final String TWO_STAR_PATH= "rating/2_star.png";
     public static final String THREE_STAR_PATH= "rating/3_star.png";
+    public static final String LEVEL_1_PATH = "map/level_1.tmx";
+    public static final String LEVEL_2_PATH = "map/level_2.tmx";
+    public static final String LEVEL_3_PATH = "map/level_3.tmx";
+    public static final String LEVEL_4_PATH = "map/level_4.tmx";
+    public static final String LEVEL_5_PATH = "map/level_5.tmx";
     public static final String PLAYER_IMG_PATH = "goose.png";
     public static final String REVERSE_PLAYER_IMG_PATH = "goose_flipped.png";
     public static final String MENU_BUTTON_PATH = "buttons/menu_button.png";
@@ -60,7 +65,11 @@ public class AssetHandler {
 
     private void loadMap() {
         manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
-        manager.load(MAP_PATH, TiledMap.class);
+        manager.load(LEVEL_1_PATH, TiledMap.class);
+        manager.load(LEVEL_2_PATH, TiledMap.class);
+        manager.load(LEVEL_3_PATH, TiledMap.class);
+        manager.load(LEVEL_4_PATH, TiledMap.class);
+        manager.load(LEVEL_5_PATH, TiledMap.class);
     }
 
     private void loadTextures(){
