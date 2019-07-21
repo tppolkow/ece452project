@@ -28,7 +28,6 @@ public class PlayState extends State {
     private Vector2 initialPressPos, finalPressPos;
     private Box2DDebugRenderer box2DDebugRenderer;
     private AssetHandler assetHandler;
-    private boolean isTimerSet = false;
     private Texture gooseForwardTexture;
     private Texture gooseReverseTexture;
 
