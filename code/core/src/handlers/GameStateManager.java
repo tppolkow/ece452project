@@ -33,6 +33,10 @@ public class GameStateManager
         states.pop().dispose();
     }
 
+    public State peek(){
+        return states.peek();
+    }
+
     public void set(State s)
     {
         if (!states.empty())

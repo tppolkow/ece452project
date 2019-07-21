@@ -45,6 +45,7 @@ public class GotlGame extends ApplicationAdapter {
 	public void resize(int width, int height)
 	{
 		//orthographicCamera.setToOrtho(false, width/SCALE, height/SCALE);
+		gsm.peek().getViewport().update(width, height);
 	}
 
 	public AssetHandler getAssetHandler() {
