@@ -1,6 +1,5 @@
 package handlers;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.display.DisplayManager;
@@ -47,7 +46,6 @@ public class VideoShareHandler
         mediaProjectionCallback = new MediaProjectionCallback();
         mMediaRecorder = new MediaRecorder();
         projectionManager = (MediaProjectionManager)mainActivity.getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-
         toggleButton = (ToggleButton)mainActivity.findViewById(R.id.toggle);
         toggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
