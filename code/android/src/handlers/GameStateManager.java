@@ -28,6 +28,15 @@ public class GameStateManager
         states.push(s);
     }
 
+    public void set(State s)
+    {
+        if (states.size() > 0)
+        {
+            pop();
+        }
+        push(s);
+    }
+
     public void pop()
     {
         states.pop().dispose();
