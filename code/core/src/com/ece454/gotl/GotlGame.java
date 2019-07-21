@@ -11,7 +11,7 @@ import states.MenuState;
 public class GotlGame extends ApplicationAdapter {
 	public static final float PIXEL_PER_METER = 32f;
 
-	public static final float SCALE = 2.0f;
+	public static final float SCALE = 2.12f;
 	public static final float TIME_STEP = 1 / 60f;
 	public static final int VELOCITY_ITERATIONS = 6;
 	public static final int POSITION_ITERATIONS = 2;
