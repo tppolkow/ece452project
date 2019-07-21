@@ -24,7 +24,11 @@ public class AssetHandler {
     private AssetManager manager = new AssetManager();
     public static final String BTN_SKIN_PATH = "skins/holo/skin/dark-mdpi/Holo-dark-mdpi.json";
     public static final String FONT_PATH = "fonts/amatic/AmaticSC-Regular.ttf";
-    public static final String MAP_PATH = "map/desert_demo.tmx";
+    public static final String LEVEL_1_PATH = "map/level_1.tmx";
+    public static final String LEVEL_2_PATH = "map/level_2.tmx";
+    public static final String LEVEL_3_PATH = "map/level_3.tmx";
+    public static final String LEVEL_4_PATH = "map/level_4.tmx";
+    public static final String LEVEL_5_PATH = "map/level_5.tmx";
     public static final String PLAYER_IMG_PATH = "goose.png";
     public static final String REVERSE_PLAYER_IMG_PATH = "goose_flipped.png";
 
@@ -54,7 +58,11 @@ public class AssetHandler {
 
     private void loadMap() {
         manager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
-        manager.load(MAP_PATH, TiledMap.class);
+        manager.load(LEVEL_1_PATH, TiledMap.class);
+        manager.load(LEVEL_2_PATH, TiledMap.class);
+        manager.load(LEVEL_3_PATH, TiledMap.class);
+        manager.load(LEVEL_4_PATH, TiledMap.class);
+        manager.load(LEVEL_5_PATH, TiledMap.class);
     }
 
     private void loadTextures(){
