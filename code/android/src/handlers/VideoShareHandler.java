@@ -88,20 +88,18 @@ public class VideoShareHandler
     public void toggleOff()
     {
         toggleButton.setChecked(false);
+        mMediaRecorder.reset();
+        stopScreenSharing();
     }
 
     public void onToggleScreenShare(View view) {
         if (((ToggleButton) view).isChecked()) {
             initRecorder();
-            Log.e(AndroidLauncher.TAG, "initialized recorder " );
             prepareRecorder();
-            Log.e(AndroidLauncher.TAG, "prepared recorder " );
             startScreenSharing();
-            Log.e(AndroidLauncher.TAG, "started sharing" );
         } else {
             mMediaRecorder.stop();
             mMediaRecorder.reset();
-            Log.e(AndroidLauncher.TAG, "stopped and reset" );
             Log.v(AndroidLauncher.TAG, "Recording Stopped (toggle method)");
             stopScreenSharing();
             postVideo(Uri.parse(mainActivity.getFilesDir() + "/capture.mp4"));
@@ -145,11 +143,10 @@ public class VideoShareHandler
     }
 
     private void initRecorder() {
-        // mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
-        // mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
         mMediaRecorder.setVideoEncodingBitRate(512 * 1000);
         mMediaRecorder.setVideoFrameRate(30);
         mMediaRecorder.setVideoSize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
