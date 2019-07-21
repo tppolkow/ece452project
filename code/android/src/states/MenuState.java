@@ -33,6 +33,7 @@ public class MenuState extends State {
         Gdx.input.setInputProcessor(stage);
         createCrest();
         createButton();
+        createSettingsBtn();
     }
 
     @Override
@@ -62,7 +63,7 @@ public class MenuState extends State {
         Texture texture = assetHandler.getManager().get(assetHandler.START_BUTTON_PATH, Texture.class);
         Drawable drawable = new TextureRegionDrawable(new TextureRegion(texture));
         Button startBtn = new ImageButton(drawable);
-        startBtn.setPosition(Gdx.graphics.getWidth() / 1.95f,Gdx.graphics.getHeight() / 5, Align.center);
+        startBtn.setPosition(Gdx.graphics.getWidth() / 1.95f,Gdx.graphics.getHeight() / 4, Align.center);
         startBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -72,6 +73,25 @@ public class MenuState extends State {
             }
         });
         stage.addActor(startBtn);
+    }
+
+    private void createSettingsBtn() {
+        Texture texture = assetHandler.getManager().get(assetHandler.SETTINGS_BUTTON_PATH, Texture.class);
+        Drawable drawable = new TextureRegionDrawable(new TextureRegion(texture));
+        Button settingsBtn = new ImageButton(drawable);
+        settingsBtn.setPosition(Gdx.graphics.getWidth()/0.75f ,Gdx.graphics.getHeight()/ 4.75f , Align.right);
+        settingsBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gsm.pop();
+                // gsm.restartLvl(true);
+                gsm.push(new ChooseLevelState(gsm));
+                gsm.render();
+            }
+        });
+        settingsBtn.setTransform(true);
+        settingsBtn.setScale(0.25f);
+        stage.addActor(settingsBtn);
     }
 
     private void createCrest() {
