@@ -95,9 +95,15 @@ public class LevelCompleteState extends State {
         nextLvlBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gsm.pop();
-                gsm.push(new PlayState(gsm, getLvlMap(gsm.getLvl() + 1)));
-                gsm.render();
+                if (gsm.getLvl() >= GameStateManager.NUM_LEVELS)
+                {
+                    gsm.set(new OutroStoryState(gsm));
+                }
+                else
+                {
+                    gsm.incrementLevel();
+                    gsm.set(new PlayState(gsm));
+                }
             }
         });
 
@@ -111,10 +117,8 @@ public class LevelCompleteState extends State {
         mainMenuBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                gsm.resetInputProcessor = true;
                 gsm.pop();
-                gsm.resetLvl();
-                gsm.push(new MenuState(gsm));
-                gsm.render();
             }
         });
 
@@ -128,10 +132,7 @@ public class LevelCompleteState extends State {
         restartBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gsm.pop();
-                gsm.restartLvl(true);
-                gsm.push(new PlayState(gsm, getLvlMap(gsm.getLvl())));
-                gsm.render();
+                gsm.set(new PlayState(gsm));
             }
         });
 
@@ -164,9 +165,6 @@ public class LevelCompleteState extends State {
 
     private void createLayout() {
         int span = 3;
-        if (gsm.getLvl() == 5) {
-            span = 2;
-        }
         Label title = createTitle();
         Label timeLabel = createTimeLabel();
         Button nextLvlBtn = createNextLvlBtn();
@@ -178,34 +176,12 @@ public class LevelCompleteState extends State {
         table.row();
         table.add(mainMenuBtn).size(100, 100);
         table.add(restartBtn).size(100, 100);
-        if (gsm.getLvl() != 5) {
-            table.add(nextLvlBtn).size(100, 100);
-        }
+        table.add(nextLvlBtn).size(100, 100);
 //        table.debug();
         table.setWidth(Gdx.graphics.getWidth());
         table.align(Align.center|Align.top);
         table.setPosition(0, Gdx.graphics.getHeight() / 1.5f);
 
         stage.addActor(table);
-    }
-
-    private TiledMap getLvlMap(int nextLvl) {
-        TiledMap map;
-        switch (nextLvl) {
-            case 1: map = assetHandler.getManager().get(assetHandler.LEVEL_1_PATH, TiledMap.class);
-                break;
-            case 2: map = assetHandler.getManager().get(assetHandler.LEVEL_2_PATH, TiledMap.class);
-                break;
-            case 3: map = assetHandler.getManager().get(assetHandler.LEVEL_3_PATH, TiledMap.class);
-                break;
-            case 4: map = assetHandler.getManager().get(assetHandler.LEVEL_4_PATH, TiledMap.class);
-                break;
-            case 5: map = assetHandler.getManager().get(assetHandler.LEVEL_5_PATH, TiledMap.class);
-                break;
-            default: map = assetHandler.getManager().get(assetHandler.LEVEL_1_PATH, TiledMap.class);
-                break;
-        }
-
-        return map;
     }
 }
