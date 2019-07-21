@@ -13,6 +13,7 @@ import handlers.WorldManager;
 public class Goose {
     public static final int MAX_JUMP_FORCE_Y = 1000;
     public static final int MAX_JUMP_FORCE_X = 130;
+    private static final float MAX_IDLE_VELOCITY = 0.2f;
     public Texture texture;
     private Texture forwardTexture;
     private Texture reverseTexture;
@@ -21,8 +22,6 @@ public class Goose {
     public int xPositionInTexture;
     public int yPositionInTexture;
 
-
-    private boolean isJumping = false;
     private boolean isDead = false;
     private boolean isLevelEnd = false;
     private boolean isLevelFailed = false;
@@ -119,10 +118,6 @@ public class Goose {
         return TEXTURE_X_OFFSET;
     }
 
-    public void setJumping(boolean jumping) {
-        isJumping = jumping;
-    }
-
     public void setLevelEnd(boolean end) {
         this.isLevelEnd = end;
     }
@@ -133,20 +128,17 @@ public class Goose {
 
     public void jump(Vector2 drag) {
         if (drag.y < 0) return;
-        if (isJumping) return;
+        if (!isIdle()) return;
         //System.out.println("BEFORE: x: " + drag.x + ", y: " + drag.y);
         drag.x = Math.max(-MAX_JUMP_FORCE_X, drag.x);
         drag.x = Math.min(MAX_JUMP_FORCE_X, drag.x);
         drag.y = Math.min(MAX_JUMP_FORCE_Y, drag.y);
         //System.out.println("AFTER:  x: " + drag.x + ", y: " + drag.y);
         body.applyForceToCenter(drag, false);
-        isJumping = true;
     }
 
-    public void checkIfIdle(){
-        if (Math.abs(body.getLinearVelocity().y) < 0.01 && Math.abs(body.getLinearVelocity().y) < 0.01){
-            isJumping = false;
-        }
+    public boolean isIdle(){
+        return Math.sqrt(Math.pow(body.getLinearVelocity().y, 2) + Math.pow(body.getLinearVelocity().x, 2)) < MAX_IDLE_VELOCITY;
     }
 
     public void fall(){
@@ -154,10 +146,6 @@ public class Goose {
             body.setLinearVelocity(0, 0);
         }
         body.setLinearVelocity(0, -15);
-    }
-
-    public boolean isJumping() {
-        return isJumping;
     }
 
     public boolean isDead() {
