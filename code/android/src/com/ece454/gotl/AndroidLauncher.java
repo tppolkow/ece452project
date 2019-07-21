@@ -59,6 +59,7 @@ public class AndroidLauncher extends AndroidApplication {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
 		if (requestCode != PERMISSION_CODE) {
 			Log.e(TAG, "Unknown request code: " + requestCode);
 			return;
@@ -70,6 +71,8 @@ public class AndroidLauncher extends AndroidApplication {
 			videoShareHandler.toggleOff();
 			return;
 		}
+
+
 		videoShareHandler.beginRecording(resultCode, data);
 	}
 }

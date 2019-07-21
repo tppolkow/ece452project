@@ -1,6 +1,5 @@
 package handlers;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.display.DisplayManager;
@@ -9,7 +8,7 @@ import android.media.MediaRecorder;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
-import android.support.design.widget.Snackbar;
+// import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ToggleButton;
@@ -33,11 +32,11 @@ public class VideoShareHandler
     private static final String VIDEO_COMMENT_STRING = "Hey fb friends! Look at this gameplay of GOTL, very epic :O";
 
     private ShareDialog shareDialog;
-    private MediaProjectionManager mProjectionManager;
-    private MediaProjection mMediaProjection;
-    private VirtualDisplay mVirtualDisplay;
-    private MediaProjectionCallback mMediaProjectionCallback;
-    private ToggleButton mToggleButton;
+    private MediaProjectionManager projectionManager;
+    private MediaProjection mediaProjection;
+    private VirtualDisplay virtualDisplay;
+    private MediaProjectionCallback mediaProjectionCallback;
+    private ToggleButton toggleButton;
     private MediaRecorder mMediaRecorder;
     private AndroidLauncher mainActivity;
 
@@ -45,15 +44,15 @@ public class VideoShareHandler
     {
         this.mainActivity = mainActivity;
         shareDialog = new ShareDialog(mainActivity);
-        mMediaProjectionCallback = new MediaProjectionCallback();
+        mediaProjectionCallback = new MediaProjectionCallback();
         mMediaRecorder = new MediaRecorder();
-        mProjectionManager = (MediaProjectionManager)mainActivity.getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-        initRecorder();
-        prepareRecorder();
+        projectionManager = (MediaProjectionManager)mainActivity.getSystemService(Context.MEDIA_PROJECTION_SERVICE);
+//      initRecorder();
+//      prepareRecorder();
 
 
-        mToggleButton = (ToggleButton)mainActivity.findViewById(R.id.toggle);
-        mToggleButton.setOnClickListener(new View.OnClickListener() {
+        toggleButton = (ToggleButton)mainActivity.findViewById(R.id.toggle);
+        toggleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onToggleScreenShare(v);
@@ -64,79 +63,77 @@ public class VideoShareHandler
     private class MediaProjectionCallback extends MediaProjection.Callback {
         @Override
         public void onStop() {
-            if (mToggleButton.isChecked()) {
-                mToggleButton.setChecked(false);
+            if (toggleButton.isChecked()) {
+                toggleButton.setChecked(false);
                 mMediaRecorder.stop();
                 mMediaRecorder.reset();
                 Log.v(AndroidLauncher.TAG, "Recording Stopped");
                 initRecorder();
                 prepareRecorder();
             }
-            mMediaProjection = null;
+            mediaProjection = null;
             stopScreenSharing();
             Log.i(AndroidLauncher.TAG, "MediaProjection Stopped");
         }
     }
 
-    public void onDestroy()
-    {
-        if (this.mMediaProjection != null) {
-            mMediaProjection.stop();
-            mMediaProjection = null;
-        }
-    }
 
     public void beginRecording(int resultCode, Intent data)
     {
-        mMediaProjection = mProjectionManager.getMediaProjection(resultCode, data);
-        mMediaProjection.registerCallback(mMediaProjectionCallback, null);
-        mVirtualDisplay = createVirtualDisplay();
+        mediaProjection = projectionManager.getMediaProjection(resultCode, data);
+        mediaProjection.registerCallback(mediaProjectionCallback, null);
+        virtualDisplay = createVirtualDisplay();
         mMediaRecorder.start();
     }
 
     public void toggleOn()
     {
-        mToggleButton.setChecked(true);
+        toggleButton.setChecked(true);
     }
 
     public void toggleOff()
     {
-        mToggleButton.setChecked(false);
+        toggleButton.setChecked(false);
+
     }
 
     public void onToggleScreenShare(View view) {
         if (((ToggleButton) view).isChecked()) {
-            initRecorder();
-            prepareRecorder();
+             initRecorder();
+            Log.e(AndroidLauncher.TAG, "initialized recorder " );
+             prepareRecorder();
+            Log.e(AndroidLauncher.TAG, "prepared recorder " );
             startScreenSharing();
+            Log.e(AndroidLauncher.TAG, "started sharing" );
         } else {
             mMediaRecorder.stop();
             mMediaRecorder.reset();
-            Log.v(AndroidLauncher.TAG, "Recording Stopped");
+            Log.e(AndroidLauncher.TAG, "stopped and reset" );
+            Log.v(AndroidLauncher.TAG, "Recording Stopped (toggle method)");
             stopScreenSharing();
             postVideo(Uri.parse(mainActivity.getFilesDir() + "/capture.mp4"));
         }
     }
 
     private void startScreenSharing() {
-        if (mMediaProjection == null) {
-            mainActivity.startActivityForResult(mProjectionManager.createScreenCaptureIntent(), PERMISSION_CODE);
+        if (mediaProjection == null) {
+            mainActivity.startActivityForResult(projectionManager.createScreenCaptureIntent(), PERMISSION_CODE);
             return;
         }
-        mVirtualDisplay = createVirtualDisplay();
+        virtualDisplay = createVirtualDisplay();
         mMediaRecorder.start();
     }
 
     private void stopScreenSharing() {
-        if (mVirtualDisplay == null) {
+        if (virtualDisplay == null) {
             return;
         }
-        mVirtualDisplay.release();
+        virtualDisplay.release();
         //mMediaRecorder.release();
     }
 
     private VirtualDisplay createVirtualDisplay() {
-        return mMediaProjection.createVirtualDisplay("MainActivity",
+        return mediaProjection.createVirtualDisplay("MainActivity",
                 DISPLAY_WIDTH, DISPLAY_HEIGHT, mScreenDensity,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
                 mMediaRecorder.getSurface(), null /*Callbacks*/, null /*Handler*/);
