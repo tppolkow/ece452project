@@ -8,13 +8,12 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
-import handlers.WorldManager;
-
 public class Goose {
-    public static final String PLAYER_IMG_PATH = "goose.png";
     public static final int MAX_JUMP_FORCE_Y = 1000;
     public static final int MAX_JUMP_FORCE_X = 130;
     public Texture texture;
+    private Texture forwardTexture;
+    private Texture reverseTexture;
     public int widthInTexture = 60;
     public int heightInTexture;
     public int xPositionInTexture;
@@ -24,6 +23,8 @@ public class Goose {
     private boolean isJumping = false;
     private boolean isDead = false;
     private boolean isLevelEnd = false;
+    private boolean isLevelFailed = false;
+
     private static final int rows = 10;
     private static final int columns = 8;
     private static final int BOX_SIZE = 32;
@@ -36,8 +37,11 @@ public class Goose {
 
     public Body body;
 
-    public Goose() {
-        texture = new Texture(PLAYER_IMG_PATH);
+    public Goose(Texture forwardTexture, Texture reverseTexture) {
+        this.forwardTexture = forwardTexture;
+        this.reverseTexture = reverseTexture;
+
+        texture = this.forwardTexture;
         heightInTexture = texture.getHeight() / rows;
         xPositionInTexture = texture.getWidth() / columns - widthInTexture;
         yPositionInTexture = texture.getHeight() / rows;
@@ -68,6 +72,37 @@ public class Goose {
         return body;
     }
 
+    private void setDeathTexture(){
+        texture = forwardTexture;
+        xPositionInTexture = texture.getWidth() / columns - widthInTexture;
+        yPositionInTexture = 7 * heightInTexture;
+    }
+
+    private void setFaceRightTexture(){
+        texture = forwardTexture;
+        xPositionInTexture = texture.getWidth() / columns - widthInTexture;
+        yPositionInTexture = heightInTexture;
+    }
+
+    private void setFaceLeftTexture(){
+        texture = reverseTexture;
+        xPositionInTexture = texture.getWidth() - widthInTexture;
+        yPositionInTexture = heightInTexture;
+    }
+
+
+    public void setCorrectTexture(){
+        if (isDead){
+            setDeathTexture();
+        }
+        else if (body.getLinearVelocity().x > 0){
+            setFaceRightTexture();
+        }
+        else if (body.getLinearVelocity().x < 0){
+            setFaceLeftTexture();
+        }
+    }
+
 
     public void hit() {
         isDead = true;
@@ -90,6 +125,10 @@ public class Goose {
         this.isLevelEnd = end;
     }
 
+    public boolean isLevelFailed() {
+        return isLevelFailed;
+    }
+
     public void jump(Vector2 drag) {
         if (drag.y < 0) return;
         //System.out.println("BEFORE: x: " + drag.x + ", y: " + drag.y);
@@ -98,6 +137,13 @@ public class Goose {
         drag.y = Math.min(MAX_JUMP_FORCE_Y, drag.y);
         //System.out.println("AFTER:  x: " + drag.x + ", y: " + drag.y);
         body.applyForceToCenter(drag, false);
+    }
+
+    public void fall(){
+        if (body.getLinearVelocity().y > 0 || body.getLinearVelocity().x > 0) {
+            body.setLinearVelocity(0, 0);
+        }
+        body.setLinearVelocity(0, -15);
     }
 
     public boolean isJumping() {
@@ -112,7 +158,9 @@ public class Goose {
         return isLevelEnd;
     }
 
+    public void setLevelFailed(boolean levelFailed) { isLevelFailed = levelFailed; }
+
     public void dispose() {
-        texture.dispose();
+
     }
 }

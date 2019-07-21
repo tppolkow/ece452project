@@ -2,22 +2,22 @@ package states;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.ece454.gotl.Goose;
-
-import handlers.AssetHandler;
-import handlers.GameStateManager;
-import handlers.WorldManager;
 
 import static com.ece454.gotl.GotlGame.PIXEL_PER_METER;
 import static com.ece454.gotl.GotlGame.POSITION_ITERATIONS;
 import static com.ece454.gotl.GotlGame.TIME_STEP;
 import static com.ece454.gotl.GotlGame.VELOCITY_ITERATIONS;
+
+import handlers.AssetHandler;
+import handlers.GameStateManager;
+import handlers.WorldManager;
 
 public class PlayState extends State {
     private TiledMap tiledMap;
@@ -25,40 +25,46 @@ public class PlayState extends State {
     private Goose goose;
     private boolean isPressed = false;
     private Vector2 initialPressPos, finalPressPos;
-    private Box2DDebugRenderer box2DDebugRenderer;
     private AssetHandler assetHandler;
+    private Texture gooseForwardTexture;
+    private Texture gooseReverseTexture;
 
-    public PlayState(GameStateManager gsm)
+    public PlayState(GameStateManager gsm, TiledMap levelMap)
     {
         super(gsm);
         initialPressPos = new Vector2();
         finalPressPos = new Vector2();
-        assetHandler = gsm.getGame().getAssetHandler();
-        tiledMap = assetHandler.getManager().get(assetHandler.MAP_PATH, TiledMap.class);
+        tiledMap = levelMap;
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+        assetHandler = gsm.getGame().getAssetHandler();
         WorldManager.resetWorld();
         WorldManager.parseTiledMap(tiledMap);
-        goose = new Goose();
+        gooseForwardTexture = assetHandler.getManager().get(assetHandler.PLAYER_IMG_PATH, Texture.class);
+        gooseReverseTexture = assetHandler.getManager().get(assetHandler.REVERSE_PLAYER_IMG_PATH, Texture.class);
+        goose = new Goose(gooseForwardTexture, gooseReverseTexture);
         goose.createBoxBody(WorldManager.world);
-        box2DDebugRenderer = new Box2DDebugRenderer();
     }
 
     @Override
     public void render() {
+        gsm.setPlayTime(System.currentTimeMillis());
         update();
-        SpriteBatch sb = gsm.getGame().getSpriteBatch();
-        sb.setProjectionMatrix(cam.combined);
-        Gdx.gl.glClearColor(0.5f, 0.8f, 1f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        tiledMapRenderer.render();
-        sb.begin();
-        sb.draw(goose.texture, goose.body.getPosition().x * PIXEL_PER_METER - (goose.getCurrentTextureYOffset()),
-                goose.body.getPosition().y * PIXEL_PER_METER - (goose.getCurrentTextureXOffset()),
-                goose.xPositionInTexture,
-                goose.yPositionInTexture,
-                goose.widthInTexture,
-                goose.heightInTexture);
-        sb.end();
+        if (!goose.isLevelEnd()) {
+            SpriteBatch sb = gsm.getGame().getSpriteBatch();
+            sb.setProjectionMatrix(cam.combined);
+            Gdx.gl.glClearColor(0.5f, 0.8f, 1f, 1f);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            tiledMapRenderer.render();
+            sb.begin();
+            goose.setCorrectTexture();
+            sb.draw(goose.texture, goose.body.getPosition().x * PIXEL_PER_METER - (goose.getCurrentTextureYOffset()),
+                    goose.body.getPosition().y * PIXEL_PER_METER - (goose.getCurrentTextureXOffset()),
+                    goose.xPositionInTexture,
+                    goose.yPositionInTexture,
+                    goose.widthInTexture,
+                    goose.heightInTexture);
+            sb.end();
+        }
     }
 
     @Override
@@ -68,12 +74,14 @@ public class PlayState extends State {
 
         handleInput();
 
-        if (goose.isDead()) {
+        if (goose.isLevelFailed()){
             disposeAndCreateNewGoose();
+        } else if (goose.isDead()) {
+            gooseDeathAnimation();
         } else if (goose.isLevelEnd()) {
-            disposeAndCreateNewGoose();
-            gsm.push(new LevelCompleteState(gsm));
-            gsm.render();
+            goose.dispose();
+            renderLvlComplete();
+            return;
         }
 
         updateCamera();
@@ -111,11 +119,26 @@ public class PlayState extends State {
         cam.update();
     }
 
+    private void gooseDeathAnimation(){
+        goose.fall();
+    }
+
     private void disposeAndCreateNewGoose() {
         WorldManager.world.destroyBody(goose.body);
         goose.dispose();
-        goose = new Goose();
+        System.out.println("GOose FORAWWRD " + gooseForwardTexture.toString());
+        goose = new Goose(gooseForwardTexture, gooseReverseTexture);
         goose.createBoxBody(WorldManager.world);
+    }
+
+    private void renderLvlComplete() {
+        gsm.setPlayTime(System.currentTimeMillis() - gsm.getPlayTime());
+        if (!gsm.lvlRestarted()) {
+            gsm.increaseLevel();
+        } else {
+            gsm.restartLvl(false);
+        }
+        gsm.set(new LevelCompleteState(gsm));
     }
 
     @Override
