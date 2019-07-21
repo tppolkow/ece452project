@@ -2,6 +2,7 @@ package com.ece454.gotl;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 
 import handlers.AssetHandler;
 import handlers.GameStateManager;

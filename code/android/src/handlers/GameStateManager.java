@@ -39,7 +39,7 @@ public class GameStateManager
         {
             pop();
         }
-        states.push(s);
+        push(s);
     }
 
     public void update(float dt)
