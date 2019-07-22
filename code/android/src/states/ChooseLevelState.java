@@ -111,26 +111,24 @@ public class ChooseLevelState extends State {
         table.setPosition(0, Gdx.graphics.getHeight() / 1.1f);
 
         stage.addActor(table);
-
+        stage.addActor(createMainMenuBtn());
     }
 
-    private TiledMap getLvlMap(int nextLvl) {
-        TiledMap map;
-        switch (nextLvl) {
-            case 1: map = assetHandler.getManager().get(assetHandler.LEVEL_1_PATH, TiledMap.class);
-                break;
-            case 2: map = assetHandler.getManager().get(assetHandler.LEVEL_2_PATH, TiledMap.class);
-                break;
-            case 3: map = assetHandler.getManager().get(assetHandler.LEVEL_3_PATH, TiledMap.class);
-                break;
-            case 4: map = assetHandler.getManager().get(assetHandler.LEVEL_4_PATH, TiledMap.class);
-                break;
-            case 5: map = assetHandler.getManager().get(assetHandler.LEVEL_5_PATH, TiledMap.class);
-                break;
-            default: map = assetHandler.getManager().get(assetHandler.LEVEL_1_PATH, TiledMap.class);
-                break;
-        }
-
-        return map;
+    private Button createMainMenuBtn() {
+        float scale = 0.5f;
+        Texture texture = assetHandler.getManager().get(assetHandler.MENU_BUTTON_PATH, Texture.class);
+        Drawable drawable = new TextureRegionDrawable(new TextureRegion(texture));
+        Button mainMenuBtn = new ImageButton(drawable);
+        mainMenuBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                gsm.resetInputProcessor = true;
+                gsm.pop();
+            }
+        });
+        mainMenuBtn.setTransform(true);
+        mainMenuBtn.setScale(scale);
+        mainMenuBtn.setPosition(Gdx.graphics.getWidth() - texture.getWidth() * scale - 40, texture.getHeight() * scale - 40);
+        return mainMenuBtn;
     }
 }

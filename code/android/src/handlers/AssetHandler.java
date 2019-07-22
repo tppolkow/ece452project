@@ -39,7 +39,7 @@ public class AssetHandler {
     public static final String NEXT_LEVEL_BUTTON_PATH = "buttons/next_level_button.png";
     public static final String RESTART_BUTTON_PATH = "buttons/restart_button.png";
     public static final String START_BUTTON_PATH = "buttons/start_button.png";
-    public static final String SETTINGS_BUTTON_PATH = "buttons/settings_button.png";
+    public static final String LEVEL_SELECT_BUTTON = "buttons/list_button.png";
 
     public void loadAssets() {
         loadFonts();
@@ -66,7 +66,7 @@ public class AssetHandler {
         manager.load(NEXT_LEVEL_BUTTON_PATH, Texture.class);
         manager.load(RESTART_BUTTON_PATH, Texture.class);
         manager.load(START_BUTTON_PATH, Texture.class);
-        manager.load(SETTINGS_BUTTON_PATH, Texture.class);
+        manager.load(LEVEL_SELECT_BUTTON, Texture.class);
     }
 
     private void loadMap() {

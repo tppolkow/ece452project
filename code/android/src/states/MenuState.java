@@ -90,10 +90,10 @@ public class MenuState extends State {
     }
 
     private void createSettingsBtn() {
-        Texture texture = assetHandler.getManager().get(assetHandler.SETTINGS_BUTTON_PATH, Texture.class);
+        Texture texture = assetHandler.getManager().get(assetHandler.LEVEL_SELECT_BUTTON, Texture.class);
         Drawable drawable = new TextureRegionDrawable(new TextureRegion(texture));
         Button settingsBtn = new ImageButton(drawable);
-        settingsBtn.setPosition(Gdx.graphics.getWidth()/0.75f ,Gdx.graphics.getHeight()/ 4.75f , Align.right);
+        settingsBtn.setPosition(Gdx.graphics.getWidth() / 0.78f, Gdx.graphics.getHeight() / 4.75f , Align.right);
         settingsBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
