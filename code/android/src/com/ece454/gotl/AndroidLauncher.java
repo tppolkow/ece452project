@@ -28,6 +28,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.ShareVideo;
+import com.facebook.share.model.ShareVideoContent;
 import com.facebook.share.widget.ShareDialog;
 
 import handlers.VideoShareHandler;
@@ -135,13 +136,13 @@ public class AndroidLauncher extends AndroidApplication {
 		ShareVideo video = new ShareVideo.Builder()
 				.setLocalUrl(videoFileUri)
 				.build();
-//        final ShareVideoContent content = new ShareVideoContent.Builder()
-//                .setVideo(video)
-//                .setContentDescription(VIDEO_COMMENT_STRING)
-//                .build();
-		final ShareLinkContent content = new ShareLinkContent.Builder()
-				.setContentUrl(Uri.parse("https://developers.facebook.com"))
-				.build();
+        final ShareVideoContent content = new ShareVideoContent.Builder()
+                .setVideo(video)
+                .setContentDescription(VideoShareHandler.VIDEO_COMMENT_STRING)
+                .build();
+//		final ShareLinkContent content = new ShareLinkContent.Builder()
+//				.setContentUrl(Uri.parse("https://developers.facebook.com"))
+//				.build();
 		if (shareDialog.canShow(content))
 		{
 			Gdx.app.postRunnable(new Runnable() {

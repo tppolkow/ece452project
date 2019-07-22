@@ -9,6 +9,7 @@ import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
 // import android.support.design.widget.Snackbar;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ToggleButton;
@@ -31,7 +32,7 @@ import static com.ece454.gotl.AndroidLauncher.mScreenDensity;
 
 public class VideoShareHandler
 {
-    private static final String VIDEO_COMMENT_STRING = "Hey fb friends! Look at this gameplay of GOTL, very epic :O";
+    public static final String VIDEO_COMMENT_STRING = "Hey fb friends! Look at this gameplay of GOTL, very epic :O";
 
     private MediaProjectionManager projectionManager;
     private MediaProjection mediaProjection;
@@ -40,6 +41,8 @@ public class VideoShareHandler
     private ToggleButton toggleButton;
     private MediaRecorder mMediaRecorder;
     private AndroidLauncher mainActivity;
+    private static final String fileDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getPath() + File.separator + "capture.mp4";
+    private File file;
 
     public VideoShareHandler(AndroidLauncher mainActivity)
     {
@@ -49,7 +52,6 @@ public class VideoShareHandler
         projectionManager = (MediaProjectionManager)mainActivity.getSystemService(Context.MEDIA_PROJECTION_SERVICE);
 //      initRecorder();
 //      prepareRecorder();
-
 
         toggleButton = (ToggleButton)mainActivity.findViewById(R.id.toggle);
         toggleButton.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +110,7 @@ public class VideoShareHandler
             mMediaRecorder.reset();
             Log.v(AndroidLauncher.TAG, "Recording Stopped (toggle method)");
             stopScreenSharing();
-            mainActivity.postVideo(Uri.parse(mainActivity.getFilesDir() + "/capture.mp4"));
+            mainActivity.postVideo(Uri.fromFile(file));
         }
     }
 
@@ -151,14 +153,19 @@ public class VideoShareHandler
 
     private void initRecorder() {
 
+        System.out.println(mainActivity.getFilesDir());
+        System.out.println(AndroidLauncher.getAppContext().getFilesDir());
+        file = new File(fileDir);
+//        file.getParentFile().mkdirs();
+        System.out.println(file.getAbsolutePath());
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
         mMediaRecorder.setVideoEncodingBitRate(512 * 1000);
         mMediaRecorder.setVideoFrameRate(30);
         mMediaRecorder.setVideoSize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
-        mMediaRecorder.setOutputFile(mainActivity.getFilesDir() + "/capture.mp4");
-        Log.v(AndroidLauncher.TAG, mainActivity.getFilesDir() + "/capture.mp4");
+        mMediaRecorder.setOutputFile(file.getAbsolutePath());
+        Log.v(AndroidLauncher.TAG, fileDir);
     }
 
 
