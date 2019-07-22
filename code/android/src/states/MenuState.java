@@ -97,8 +97,6 @@ public class MenuState extends State {
         settingsBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gsm.pop();
-                // gsm.restartLvl(true);
                 gsm.push(new ChooseLevelState(gsm));
                 gsm.render();
             }

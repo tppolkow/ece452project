@@ -86,9 +86,8 @@ public class ChooseLevelState extends State {
         lvlButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gsm.pop();
-                gsm.push(new PlayState(gsm, getLvlMap(level)));
-                gsm.render();
+                gsm.setLevel(level);
+                gsm.set(new PlayState(gsm));
             }
         });
         return lvlButton;
@@ -115,20 +114,6 @@ public class ChooseLevelState extends State {
         table.add(lvl4Btn).align(Align.center).width(Gdx.graphics.getWidth()).padBottom(100);
         table.row();
         table.add(lvl5Btn).align(Align.center).width(Gdx.graphics.getWidth()).padBottom(100);
-
-//        table.add(lvl2Btn).colspan(span).align(Align.center).width(Gdx.graphics.getWidth()).padBottom(100);
-//
-//        table.add(lvl3Btn).colspan(span).align(Align.center).width(Gdx.graphics.getWidth()).padBottom(100);
-//
-//        table.add(lvl4Btn).colspan(span).align(Align.center).width(Gdx.graphics.getWidth()).padBottom(100);
-//        table.add(lvl5Btn).colspan(span).align(Align.center).width(Gdx.graphics.getWidth()).padBottom(100);
-
-//        table.add(mainMenuBtn).size(100, 100);
-//        table.add(restartBtn).size(100, 100);
-//        if (gsm.getLvl() != 5) {
-//            table.add(nextLvlBtn).size(100, 100);
-//        }
-//        table.debug();
         table.setWidth(Gdx.graphics.getWidth());
         table.align(Align.center|Align.top);
         table.setPosition(0, Gdx.graphics.getHeight() / 1.1f);
