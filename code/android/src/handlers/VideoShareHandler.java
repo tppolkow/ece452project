@@ -16,10 +16,12 @@ import android.widget.ToggleButton;
 import com.badlogic.gdx.Gdx;
 import com.ece454.gotl.AndroidLauncher;
 import com.ece454.gotl.R;
+import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.ShareVideo;
 import com.facebook.share.model.ShareVideoContent;
 import com.facebook.share.widget.ShareDialog;
 
+import java.io.File;
 import java.io.IOException;
 
 import static com.ece454.gotl.AndroidLauncher.DISPLAY_HEIGHT;
@@ -31,7 +33,6 @@ public class VideoShareHandler
 {
     private static final String VIDEO_COMMENT_STRING = "Hey fb friends! Look at this gameplay of GOTL, very epic :O";
 
-    private ShareDialog shareDialog;
     private MediaProjectionManager projectionManager;
     private MediaProjection mediaProjection;
     private VirtualDisplay virtualDisplay;
@@ -43,7 +44,6 @@ public class VideoShareHandler
     public VideoShareHandler(AndroidLauncher mainActivity)
     {
         this.mainActivity = mainActivity;
-        shareDialog = new ShareDialog(mainActivity);
         mediaProjectionCallback = new MediaProjectionCallback();
         mMediaRecorder = new MediaRecorder();
         projectionManager = (MediaProjectionManager)mainActivity.getSystemService(Context.MEDIA_PROJECTION_SERVICE);
@@ -108,7 +108,7 @@ public class VideoShareHandler
             mMediaRecorder.reset();
             Log.v(AndroidLauncher.TAG, "Recording Stopped (toggle method)");
             stopScreenSharing();
-            postVideo(Uri.parse(mainActivity.getFilesDir() + "/capture.mp4"));
+            mainActivity.postVideo(Uri.parse(mainActivity.getFilesDir() + "/capture.mp4"));
         }
     }
 
@@ -161,32 +161,5 @@ public class VideoShareHandler
         Log.v(AndroidLauncher.TAG, mainActivity.getFilesDir() + "/capture.mp4");
     }
 
-    public void postVideo(Uri videoFileUri)
-    {
-        ShareVideo video = new ShareVideo.Builder()
-                .setLocalUrl(videoFileUri)
-                .build();
-        final ShareVideoContent content = new ShareVideoContent.Builder()
-                .setVideo(video)
-                .setContentDescription(VIDEO_COMMENT_STRING)
-                .build();
-        if (shareDialog.canShow(content))
-        {
-            Gdx.app.postRunnable(new Runnable() {
-                @Override
-                public void run() {
-                    shareDialog.show(content);
-                }
-            });
-        }
-        else
-        {
-            /*Snackbar.make(mainActivity.findViewById(R.id.parent_layout), "YEET", Snackbar.LENGTH_LONG)
-                    .setAction("CLOSE", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) { }
-                    }).show();
-                    */
-        }
-    }
+
 }

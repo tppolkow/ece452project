@@ -6,6 +6,7 @@ import android.hardware.display.VirtualDisplay;
 import android.media.MediaRecorder;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -15,8 +16,19 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.internal.CallbackManagerImpl;
+import com.facebook.login.LoginResult;
+import com.facebook.share.Sharer;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.ShareVideo;
+import com.facebook.share.widget.ShareDialog;
 
 import handlers.VideoShareHandler;
 import java.io.IOException;
@@ -30,6 +42,8 @@ public class AndroidLauncher extends AndroidApplication {
 	public static final int DISPLAY_HEIGHT = 640;
 	private VideoShareHandler videoShareHandler;
 	private static Context context;
+	private CallbackManager callbackManager;
+	private ShareDialog shareDialog;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -50,8 +64,29 @@ public class AndroidLauncher extends AndroidApplication {
 		layout.addView(initializeForView(new GotlGame(), config));
 		layout.addView(myLayout);
 		setContentView(layout);
-
+		callbackManager = CallbackManager.Factory.create();
 		videoShareHandler = new VideoShareHandler(this);
+		shareDialog = new ShareDialog(this);
+		shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
+			@Override
+			public void onSuccess(Sharer.Result loginResult) {
+				System.out.println("SUCCCESS");
+				// App code
+			}
+
+			@Override
+			public void onCancel() {
+				System.out.println("CANCEL");
+				// App code
+			}
+
+			@Override
+			public void onError(FacebookException exception) {
+				System.out.println("ERROR");
+				exception.printStackTrace();
+				// App code
+			}
+		});
 	}
 
 	public static Context getAppContext()
@@ -66,20 +101,64 @@ public class AndroidLauncher extends AndroidApplication {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (!FacebookSdk.isFacebookRequestCode(requestCode)) {
+			if (requestCode != PERMISSION_CODE) {
+				Log.e(TAG, "Unknown request code: " + requestCode);
+				return;
+			}
+			if (resultCode != RESULT_OK) {
+				Toast.makeText(this,
+						"Screen Cast Permission Denied", Toast.LENGTH_SHORT).show();
 
-		if (requestCode != PERMISSION_CODE) {
-			Log.e(TAG, "Unknown request code: " + requestCode);
-			return;
+				videoShareHandler.toggleOff();
+				return;
+			}
+
+
+			videoShareHandler.beginRecording(resultCode, data);
+		} else {
+//			if (requestCode == CallbackManagerImpl.RequestCodeOffset.Login.toRequestCode()) {
+//				//login
+//				startActivity(Intent.createChooser(data, "Share via"));
+//			}
+//			else if (requestCode == CallbackManagerImpl.RequestCodeOffset.Share.toRequestCode()){
+//				//share
+//				startActivity(Intent.createChooser(data, "Share via"));
+//			}
+			callbackManager.onActivityResult(requestCode, resultCode, data);
+			super.onActivityResult(requestCode, resultCode, data);
 		}
-		if (resultCode != RESULT_OK) {
-			Toast.makeText(this,
-					"Screen Cast Permission Denied", Toast.LENGTH_SHORT).show();
+	}
 
-			videoShareHandler.toggleOff();
-			return;
+	public void postVideo(Uri videoFileUri)
+	{
+		ShareVideo video = new ShareVideo.Builder()
+				.setLocalUrl(videoFileUri)
+				.build();
+//        final ShareVideoContent content = new ShareVideoContent.Builder()
+//                .setVideo(video)
+//                .setContentDescription(VIDEO_COMMENT_STRING)
+//                .build();
+		final ShareLinkContent content = new ShareLinkContent.Builder()
+				.setContentUrl(Uri.parse("https://developers.facebook.com"))
+				.build();
+		if (shareDialog.canShow(content))
+		{
+			Gdx.app.postRunnable(new Runnable() {
+				@Override
+				public void run() {
+					shareDialog.show(content);
+				}
+			});
 		}
-
-
-		videoShareHandler.beginRecording(resultCode, data);
+		else
+		{
+            /*Snackbar.make(mainActivity.findViewById(R.id.parent_layout), "YEET", Snackbar.LENGTH_LONG)
+                    .setAction("CLOSE", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) { }
+                    }).show();
+                    */
+		}
 	}
 }
