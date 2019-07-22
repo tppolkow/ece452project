@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.badlogic.gdx.Gdx;
@@ -110,7 +111,7 @@ public class VideoShareHandler
             mMediaRecorder.reset();
             Log.v(AndroidLauncher.TAG, "Recording Stopped (toggle method)");
             stopScreenSharing();
-            mainActivity.postVideo(Uri.fromFile(file));
+            Toast.makeText(AndroidLauncher.getAppContext(), " Saved to Internal Storage ", Toast.LENGTH_LONG).show();
         }
     }
 

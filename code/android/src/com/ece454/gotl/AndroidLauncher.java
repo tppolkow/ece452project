@@ -1,13 +1,16 @@
 package com.ece454.gotl;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.display.VirtualDisplay;
 import android.media.MediaRecorder;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,6 +48,11 @@ public class AndroidLauncher extends AndroidApplication {
 	private static Context context;
 	private CallbackManager callbackManager;
 	private ShareDialog shareDialog;
+	private String[] PERMISSIONS_STORAGE = {
+			Manifest.permission.READ_EXTERNAL_STORAGE,
+			Manifest.permission.WRITE_EXTERNAL_STORAGE
+	};
+
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -88,6 +96,8 @@ public class AndroidLauncher extends AndroidApplication {
 				// App code
 			}
 		});
+
+		requestPermission();
 	}
 
 	public static Context getAppContext()
@@ -126,8 +136,9 @@ public class AndroidLauncher extends AndroidApplication {
 //				//share
 //				startActivity(Intent.createChooser(data, "Share via"));
 //			}
-			callbackManager.onActivityResult(requestCode, resultCode, data);
 			super.onActivityResult(requestCode, resultCode, data);
+			callbackManager.onActivityResult(requestCode, resultCode, data);
+
 		}
 	}
 
@@ -160,6 +171,19 @@ public class AndroidLauncher extends AndroidApplication {
                         public void onClick(View view) { }
                     }).show();
                     */
+		}
+	}
+
+	private void requestPermission() {
+		int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+		if (permission != PackageManager.PERMISSION_GRANTED) {
+			// We don't have permission so prompt the user
+			ActivityCompat.requestPermissions(
+					this,
+					PERMISSIONS_STORAGE,
+					1
+			);
 		}
 	}
 }
