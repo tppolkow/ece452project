@@ -169,5 +169,15 @@ public class VideoShareHandler
         Log.v(AndroidLauncher.TAG, fileDir);
     }
 
-
+    public void postVideo(Uri videoFileUri)
+    {
+        ShareVideo video = new ShareVideo.Builder()
+                .setLocalUrl(videoFileUri)
+                .build();
+        final ShareVideoContent content = new ShareVideoContent.Builder()
+                .setVideo(video)
+                .setContentDescription(VIDEO_COMMENT_STRING)
+                .build();
+        ShareDialog.show(mainActivity, content);
+    }
 }

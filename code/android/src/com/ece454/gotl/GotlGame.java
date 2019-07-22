@@ -1,6 +1,5 @@
 package com.ece454.gotl;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -9,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import handlers.AssetHandler;
 import handlers.GameStateManager;
 import states.MenuState;
-import states.PlayState;
 
 public class GotlGame extends ApplicationAdapter {
 	public static final float PIXEL_PER_METER = 32f;
@@ -22,7 +20,7 @@ public class GotlGame extends ApplicationAdapter {
 	private GameStateManager gsm;
 	private AssetHandler assetHandler;
 	public static final String PREFS_NAME = "shared_preferences";
-	private final String firstTimePlayingStr = "firstTimePlaying";
+	public static final String FIRST_TIME_PLAYING_STR = "firstTimePlaying";
 
 	@Override
 	public void create () {
@@ -37,12 +35,7 @@ public class GotlGame extends ApplicationAdapter {
 	private boolean getFirstTimePlaying()
 	{
 		SharedPreferences settings = AndroidLauncher.getAppContext().getSharedPreferences(PREFS_NAME, 0);
-		boolean firstTimePlaying = settings.getBoolean(firstTimePlayingStr, true);
-		if (firstTimePlaying)
-		{
-			settings.edit().putBoolean(firstTimePlayingStr, false).commit();
-		}
-		return firstTimePlaying;
+		return settings.getBoolean(FIRST_TIME_PLAYING_STR, true);
 	}
 
 	@Override

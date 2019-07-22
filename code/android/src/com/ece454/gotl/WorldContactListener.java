@@ -18,11 +18,9 @@ public class WorldContactListener implements ContactListener {
         Goose goose = (Goose) fb.getUserData();
         if (isGroundContact(fa, fb)) {
             System.out.println("goose contact ground");
-            goose.setJumping(false);
         }
         if (isDangerContact(fa, fb)) {
             System.out.println("goose contact danger");
-            goose.setJumping(false);
             goose.hit();
         }
         if (isCloudContact(fa, fb)) {
@@ -44,11 +42,10 @@ public class WorldContactListener implements ContactListener {
         if (fa.getUserData() == null || fb.getUserData() == null) return;
         if (isGroundContact(fa, fb)) {
             Goose goose = (Goose) fb.getUserData();
-            goose.setJumping(true);
+            goose.resetJumpCount();
         }
         if (isDangerContact(fa, fb)) {
             Goose goose = (Goose) fb.getUserData();
-            goose.setJumping(true);
         }
     }
 
