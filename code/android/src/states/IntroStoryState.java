@@ -1,8 +1,14 @@
 package states;
 
+import android.content.SharedPreferences;
+
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.ece454.gotl.AndroidLauncher;
 
 import handlers.GameStateManager;
+
+import static com.ece454.gotl.GotlGame.FIRST_TIME_PLAYING_STR;
+import static com.ece454.gotl.GotlGame.PREFS_NAME;
 
 public class IntroStoryState extends StoryState
 {
@@ -11,6 +17,11 @@ public class IntroStoryState extends StoryState
         @Override
         public void execute()
         {
+            AndroidLauncher.getAppContext()
+                    .getSharedPreferences(PREFS_NAME, 0)
+                    .edit()
+                    .putBoolean(FIRST_TIME_PLAYING_STR, false)
+                    .commit();
             gsm.set(new PlayState(gsm));
         }
     }

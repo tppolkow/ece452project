@@ -170,23 +170,6 @@ public class VideoShareHandler
                 .setVideo(video)
                 .setContentDescription(VIDEO_COMMENT_STRING)
                 .build();
-        if (shareDialog.canShow(content))
-        {
-            Gdx.app.postRunnable(new Runnable() {
-                @Override
-                public void run() {
-                    shareDialog.show(content);
-                }
-            });
-        }
-        else
-        {
-            /*Snackbar.make(mainActivity.findViewById(R.id.parent_layout), "YEET", Snackbar.LENGTH_LONG)
-                    .setAction("CLOSE", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) { }
-                    }).show();
-                    */
-        }
+        ShareDialog.show(mainActivity, content);
     }
 }
