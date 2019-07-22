@@ -102,6 +102,10 @@ public class GameStateManager
         saveLevel();
     }
 
+    public void setLevel(int i) {
+        this.level = i;
+    }
+
     public TiledMap getLvlMap() {
         AssetHandler assetHandler = game.getAssetHandler();
         switch (level) {
