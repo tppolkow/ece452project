@@ -31,8 +31,6 @@ public class ChooseLevelState extends State {
 
     private Table table = new Table();
 
-
-
     public ChooseLevelState(GameStateManager gsm) {
         super(gsm);
         assetHandler = gsm.getGame().getAssetHandler();
@@ -53,10 +51,6 @@ public class ChooseLevelState extends State {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
-
-
-
-
     }
 
     @Override
@@ -108,8 +102,6 @@ public class ChooseLevelState extends State {
         table.add(lvl2Btn).align(Align.center).width(Gdx.graphics.getWidth()).padBottom(100);
         table.row();
         table.add(lvl3Btn).align(Align.center).width(Gdx.graphics.getWidth()).padBottom(100);
-        table.row();
-        table.add(lvl4Btn).align(Align.center).width(Gdx.graphics.getWidth()).padBottom(100);
         table.row();
         table.add(lvl4Btn).align(Align.center).width(Gdx.graphics.getWidth()).padBottom(100);
         table.row();
