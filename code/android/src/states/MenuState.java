@@ -1,5 +1,6 @@
 package states;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -25,9 +26,11 @@ public class MenuState extends State {
 
     private Stage stage;
     private AssetHandler assetHandler;
+    private boolean firstTimePlaying;
 
-    public MenuState(GameStateManager gsm) {
+    public MenuState(GameStateManager gsm, boolean firstTimePlaying) {
         super(gsm);
+        this.firstTimePlaying = firstTimePlaying;
         assetHandler = gsm.getGame().getAssetHandler();
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
@@ -38,6 +41,11 @@ public class MenuState extends State {
 
     @Override
     public void render() {
+        if (GameStateManager.resetInputProcessor)
+        {
+            Gdx.input.setInputProcessor(stage);
+            GameStateManager.resetInputProcessor = false;
+        }
         Gdx.gl.glClearColor(0.5f, 0.8f, 1f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
@@ -67,9 +75,15 @@ public class MenuState extends State {
         startBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                gsm.pop();
-                gsm.push(new PlayState(gsm, assetHandler.getManager().get(assetHandler.LEVEL_1_PATH, TiledMap.class)));
-                gsm.render();
+                Gdx.input.setInputProcessor(null);
+                if (firstTimePlaying)
+                {
+                    gsm.push(new IntroStoryState(gsm));
+                }
+                else
+                {
+                    gsm.push(new PlayState(gsm));
+                }
             }
         });
         stage.addActor(startBtn);
