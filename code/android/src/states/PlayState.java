@@ -29,12 +29,12 @@ public class PlayState extends State {
     private Texture gooseForwardTexture;
     private Texture gooseReverseTexture;
 
-    public PlayState(GameStateManager gsm, TiledMap levelMap)
+    public PlayState(GameStateManager gsm)
     {
         super(gsm);
         initialPressPos = new Vector2();
         finalPressPos = new Vector2();
-        tiledMap = levelMap;
+        tiledMap = gsm.getLvlMap();
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         assetHandler = gsm.getGame().getAssetHandler();
         WorldManager.resetWorld();
@@ -133,11 +133,6 @@ public class PlayState extends State {
 
     private void renderLvlComplete() {
         gsm.setPlayTime(System.currentTimeMillis() - gsm.getPlayTime());
-        if (!gsm.lvlRestarted()) {
-            gsm.increaseLevel();
-        } else {
-            gsm.restartLvl(false);
-        }
         gsm.set(new LevelCompleteState(gsm));
     }
 
